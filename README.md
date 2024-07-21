@@ -1,5 +1,12 @@
 # bit-mentor-server
 
+## Table of Contents
+- [Team Members](#team-members)
+- [Overview](#overview)
+- [Technologies](#technologies)
+- [Diagram](#Diagram)
+- [Project Folder Structure](#project-folder-structure)
+
 ## Team members:  
 - Muhammad Sarahni  
 - Adam Kaabiya  
