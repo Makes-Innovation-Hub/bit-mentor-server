@@ -1,5 +1,5 @@
 from fastapi  import FastAPI, Request
-from controllers import topic_controller
+from server.controllers import topic_controller
 
 app = FastAPI()
 
@@ -13,5 +13,5 @@ async def log_req(request:Request, call_next):
 
 @app.get("/")
 def root():
-    return {"message": "Hello from FastApi"}
+    return {"message": "Hello, World!"}
 
