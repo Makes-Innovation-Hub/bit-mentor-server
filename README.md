@@ -22,10 +22,6 @@ The architecture for the Bit Mentor Telegram bot's web server consists of the fo
 
 ## Project Folder Structure:
 
-
-
-## Explanation of Files
-
 ### MongoDB Folder
 - **`mongodb.py`**:
   - **Class Definitions**: Contains MongoDB-related class for defining data schemas, managing collections, and handling connections to the MongoDB URI.
@@ -45,6 +41,8 @@ The architecture for the Bit Mentor Telegram bot's web server consists of the fo
 
 ### tests Folder
 The `tests` folder is dedicated to storing tests  for your application. Automated testing helps ensure that your 
+
+---
 
 ### server Folder
 
