@@ -20,6 +20,10 @@ The architecture for the Bit Mentor Telegram bot's web server consists of the fo
 
 3. **OpenAI API**: The OpenAI API is utilized to generate questions and answers dynamically. When the server receives a topic from the client, it uses the OpenAI API to create relevant trivia questions and answers.   
 
+## Diagram  
+
+![server](https://github.com/user-attachments/assets/528bf163-6b74-4fb5-904e-4ddae63b5d18)
+
 ## Project Folder Structure:
 
 ### MongoDB Folder
