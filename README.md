@@ -76,3 +76,15 @@ Contains utility functions and helper methods that are used across different par
 ---
 This structure helps keep your data interaction code organized and separated by functionality, making it easier to maintain and scale your application.
 
+## How to run
+
+In root directory, open terminal and run this command  
+```
+python -m server.server
+```
+
+
+To run tests use this command  
+```
+pytest
+```
