@@ -17,6 +17,10 @@
 ## Overview  
 This web server powers the Bit Mentor Telegram bot. It receives a topic from the bot and dynamically generates questions and answers related to that topic, then sends them to the bot.   
 
+## Server link  
+
+https://bit-mentor-server.onrender.com
+
 ## Technologies:  
 
 The architecture for the Bit Mentor Telegram bot's web server consists of the following components:  
