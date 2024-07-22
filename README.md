@@ -78,8 +78,9 @@ This structure helps keep your data interaction code organized and separated by 
 
 ## How to run
 
-In root directory, open terminal and run this command  
+In root directory, open terminal and run these commands  
 ```
+pip install -r requirements.txt
 python -m server.server
 ```
 
