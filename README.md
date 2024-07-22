@@ -57,6 +57,12 @@ The `server/` folder contains the core components of your server-side applicatio
 
 - **`utils/`**: 
 Contains utility functions and helper methods that are used across different parts of the server application.
+such as :
+- open_ai.py: handles communication with open ai.
+
+
+env includes:
+- OPENAI_KEY = open ai key
 
 ---
 This structure helps keep your data interaction code organized and separated by functionality, making it easier to maintain and scale your application.
