@@ -1,5 +1,12 @@
 # bit-mentor-server
 
+## Table of Contents
+- [Team Members](#team-members)
+- [Overview](#overview)
+- [Technologies](#technologies)
+- [Diagram](#Diagram)
+- [Project Folder Structure](#project-folder-structure)
+
 ## Team members:  
 - Muhammad Sarahni  
 - Adam Kaabiya  
@@ -19,6 +26,10 @@ The architecture for the Bit Mentor Telegram bot's web server consists of the fo
 2. **MongoDB**: This NoSQL database is used to store and manage the questions and answers as well as user's score.  
 
 3. **OpenAI API**: The OpenAI API is utilized to generate questions and answers dynamically. When the server receives a topic from the client, it uses the OpenAI API to create relevant trivia questions and answers.   
+
+## Diagram  
+
+![server](https://github.com/user-attachments/assets/528bf163-6b74-4fb5-904e-4ddae63b5d18)
 
 ## Project Folder Structure:
 
@@ -61,3 +72,15 @@ Contains utility functions and helper methods that are used across different par
 ---
 This structure helps keep your data interaction code organized and separated by functionality, making it easier to maintain and scale your application.
 
+## How to run
+
+In root directory, open terminal and run this command  
+```
+python -m server.server
+```
+
+
+To run tests use this command  
+```
+pytest
+```
