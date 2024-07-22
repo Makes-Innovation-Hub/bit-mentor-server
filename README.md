@@ -72,10 +72,16 @@ Contains utility functions and helper methods that are used across different par
 ---
 This structure helps keep your data interaction code organized and separated by functionality, making it easier to maintain and scale your application.
 
+## Enviroment variables  
+
+There needs to be an enviroment variable for the server link  
+SERVER_URL="URL"  
+
 ## How to run
 
-In root directory, open terminal and run this command  
+In root directory, open terminal and run these commands  
 ```
+pip install -r requirements.txt
 python -m server.server
 ```
 
