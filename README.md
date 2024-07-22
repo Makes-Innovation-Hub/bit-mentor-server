@@ -17,10 +17,6 @@
 ## Overview  
 This web server powers the Bit Mentor Telegram bot. It receives a topic from the bot and dynamically generates questions and answers related to that topic, then sends them to the bot.   
 
-## Server link  
-
-https://bit-mentor-server.onrender.com
-
 ## Technologies:  
 
 The architecture for the Bit Mentor Telegram bot's web server consists of the following components:  
@@ -75,6 +71,11 @@ Contains utility functions and helper methods that are used across different par
 
 ---
 This structure helps keep your data interaction code organized and separated by functionality, making it easier to maintain and scale your application.
+
+## Enviroment variables  
+
+There needs to be an enviroment variable for the server link  
+SERVER_URL="URL"  
 
 ## How to run
 
