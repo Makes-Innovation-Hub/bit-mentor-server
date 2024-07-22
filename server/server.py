@@ -1,12 +1,15 @@
-from fastapi  import FastAPI, Request
+from fastapi import FastAPI, Request
 from server.controllers import topic_controller
+from dotenv import load_dotenv
+
+load_dotenv()
 
 app = FastAPI()
 
 app.include_router(topic_controller.router)
 
 @app.middleware("http")
-async def log_req(request:Request, call_next):
+async def log_req(request: Request, call_next):
     print(f'got req. to: {request.url}, method: {request.method}')
     response = await call_next(request)
     return response
@@ -14,7 +17,6 @@ async def log_req(request:Request, call_next):
 @app.get("/")
 def root():
     return {"message": "Hello, World!"}
-
 
 if __name__ == "__main__":
     import uvicorn

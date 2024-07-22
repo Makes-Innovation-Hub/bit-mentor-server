@@ -8,7 +8,8 @@ def test_read_root():
     assert response.status_code == 200
     assert response.json() == {"message": "Hello, World!"}
 
-def test_name_root():
-    response = client.get("/name")
+def test_generate_question():
+    response = client.get("/generate-question/science")
     assert response.status_code == 200
-    assert response.json() == {"name": "name"}
+    assert "question" in response.json()
+    assert "explanation" in response.json()

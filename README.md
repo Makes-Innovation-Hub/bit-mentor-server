@@ -72,10 +72,13 @@ Contains utility functions and helper methods that are used across different par
 ---
 This structure helps keep your data interaction code organized and separated by functionality, making it easier to maintain and scale your application.
 
-## Enviroment variables  
+## Environment Variables
 
-There needs to be an enviroment variable for the server link  
-SERVER_URL="URL"  
+The following environment variables are used in the project. Add them to a `.env` file in the root directory.
+
+- `BOT_TOKEN`: Token for the Telegram bot.
+- `SERVER_ADDRESS`: The URL of the server.
+- `OPENAI_KEY`: API key for OpenAI. 
 
 ## How to run
 
