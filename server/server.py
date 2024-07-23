@@ -1,9 +1,10 @@
-from fastapi  import FastAPI, Request
-from server.controllers import topic_controller
+from fastapi import FastAPI, Request
+from server.controllers import openai_controller
 
 app = FastAPI()
 
-app.include_router(topic_controller.router)
+app.include_router(openai_controller.router)
+
 
 @app.middleware("http")
 async def log_req(request:Request, call_next):

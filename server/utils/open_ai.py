@@ -3,8 +3,16 @@ import os
 from openai import OpenAI
 from dotenv import load_dotenv
 
+from server.utils.ai_prompt import create_question_and_answer_and_explanation
+
 load_dotenv()
 client = OpenAI(api_key=os.getenv("OPENAI_KEY"))
+
+
+
+def get_question_and_answer_and_explanation(subject):
+    return get_openai_response(create_question_and_answer_and_explanation(subject))
+
 
 def get_openai_response(prompt):
     if not client.api_key:
