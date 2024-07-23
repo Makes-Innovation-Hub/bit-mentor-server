@@ -1,5 +1,5 @@
 from fastapi import FastAPI, Request
-from server.controllers import topic_controller
+from server.controllers import topic_controller, mongo_controller
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -7,6 +7,7 @@ load_dotenv()
 app = FastAPI()
 
 app.include_router(topic_controller.router)
+app.include_router(mongo_controller.router)
 
 @app.middleware("http")
 async def log_req(request: Request, call_next):
