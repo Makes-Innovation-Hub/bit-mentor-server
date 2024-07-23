@@ -81,16 +81,20 @@ This structure helps keep your data interaction code organized and separated by 
 ## Enviroment variables  
 
 There needs to be an enviroment variable for the server link  
-SERVER_URL="URL"  
+SERVER_URL="URL"
 
-## How to run
+- `MONGO_USERNAME`: Username for MongoDB Atlas.
+- `MONGO_PASSWORD`: Password for MongoDB Atlas.
+- `MONGO_CLUSTER_URL`: Cluster URL for MongoDB Atlas. 
 
-In root directory, open terminal and run these commands  
+
+## How to Run
+
+In the root directory, open terminal and run these commands:  
 ```
 pip install -r requirements.txt
 python -m server.server
 ```
-
 
 To run tests use this command  
 ```
