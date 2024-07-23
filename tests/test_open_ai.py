@@ -1,78 +1,74 @@
-from server.utils.open_ai import *
+import json
 from unittest.mock import patch, Mock
 
+from server.utils.open_ai import get_openai_response, create_question_and_answer_and_explanation, \
+    get_question_and_answer_and_explanation
 
-@patch('requests.post')
-def test_get_openai_response_success(mock_post):
+
+@patch('server.utils.open_ai.client.chat.completions.create')
+def test_get_openai_response_success(mock_create):
     mock_response = Mock()
-    mock_response.json.return_value = {
-        'choices': [{
-            'message': {
-                'content': 'Sample question, answer and explanation'
-            }
-        }]
-    }
-    mock_post.return_value = mock_response
+    mock_response.choices = [Mock()]
+    mock_response.choices[0].message.content = json.dumps({
+        "question": "What is FastAPI?",
+        "answer": "FastAPI is a modern web framework for building APIs with Python.",
+        "explanation": "FastAPI is designed for high performance and productivity, leveraging Python's type hints to improve code readability and reduce bugs."
+    })
+    mock_create.return_value = mock_response
 
-    response, error = get_openai_response("Sample prompt")
+    prompt = "What is FastAPI?"
+    response, error = get_openai_response(prompt)
     assert not error
-    assert response == 'Sample question, answer and explanation'
+    assert response["question"] == "What is FastAPI?"
+    assert response["answer"] == "FastAPI is a modern web framework for building APIs with Python."
+    assert response[
+               "explanation"] == "FastAPI is designed for high performance and productivity, leveraging Python's type hints to improve code readability and reduce bugs."
 
 
-@patch('requests.post')
-def test_get_openai_response_failure(mock_post):
+@patch('server.utils.open_ai.client.chat.completions.create')
+def test_get_openai_response_failure(mock_create):
     mock_response = Mock()
-    mock_response.json.return_value = {}
-    mock_post.return_value = mock_response
+    mock_response.choices = [Mock()]
+    mock_response.choices[0].message.content = "Some non-JSON response"
+    mock_create.return_value = mock_response
 
-    response, error = get_openai_response("Sample prompt")
-    assert error
-    assert response == "No valid response in 'choices'."
+    prompt = "What is FastAPI?"
+    response, error = get_openai_response(prompt)
+    assert not error
+    assert response == "Some non-JSON response"
 
 
-@patch('requests.post', side_effect=Exception('Test exception'))
-def test_get_openai_response_exception(mock_post):
-    response, error = get_openai_response("Sample prompt")
+@patch('server.utils.open_ai.client.chat.completions.create', side_effect=Exception("Test exception"))
+def test_get_openai_response_exception(mock_create):
+    prompt = "What is FastAPI?"
+    response, error = get_openai_response(prompt)
     assert error
     assert "An error occurred: Test exception" in response
 
 
-@patch('requests.post')
-def test_get_openai_response_no_api_key(mock_post):
-    with patch.dict('os.environ', {'OPENAI_KEY': ''}):
-        response, error = get_openai_response("Sample prompt")
-        assert error
-        assert response == "API key not provided. Please set the OPENAI_KEY environment variable."
-
-
-@patch('requests.post')
-def test_format_data(mock_post):
-    prompt = "Sample prompt"
-    formatted_data = format_data(prompt)
-    expected_data = {
-        'model': 'gpt-3.5-turbo',
-        'messages': [
-            {"role": "system", "content": "You are a helpful assistant."},
-            {"role": "user", "content": prompt}
-        ]
-    }
-    assert formatted_data == expected_data
-
-
-@patch('requests.post')
-def test_create_header(mock_post):
-    api_key = "test_key"
-    headers = create_header(api_key)
-    expected_headers = {
-        'Authorization': f'Bearer {api_key}',
-        'Content-Type': 'application/json'
-    }
-    assert headers == expected_headers
-
-
-@patch('requests.post')
-def test_create_question_and_answer_and_explanation(mock_post):
+def test_create_question_and_answer_and_explanation():
     subject = "Python programming"
     result = create_question_and_answer_and_explanation(subject)
-    expected_result = "give me a question,answer and explanation on Python programming.return them in a dictionary format. limit the question length to 100 chars"
+    expected_result = ("Give me a question, answer, and explanation on Python programming. Return them in a dictionary "
+                       "format with the keys 'question' 'answer' 'explanation'. Limit the question length to 100 chars.")
     assert result == expected_result
+
+
+@patch('server.utils.open_ai.client.chat.completions.create')
+def test_get_question_and_answer_and_explanation(mock_create):
+    mock_response = Mock()
+    mock_response.choices = [Mock()]
+    mock_response.choices[0].message.content = json.dumps({
+        "question": "What is FastAPI?",
+        "answer": "FastAPI is a modern web framework for building APIs with Python.",
+        "explanation": "FastAPI is designed for high performance and productivity, leveraging Python's type hints to improve code readability and reduce bugs."
+    })
+    mock_create.return_value = mock_response
+
+    prompt = "Python programming"
+    response, error = get_question_and_answer_and_explanation(prompt)
+    assert not error
+    assert response["question"] == "What is FastAPI?"
+    assert response["answer"] == "FastAPI is a modern web framework for building APIs with Python."
+    assert response[
+               "explanation"] == "FastAPI is designed for high performance and productivity, leveraging Python's type hints to improve code readability and reduce bugs."
