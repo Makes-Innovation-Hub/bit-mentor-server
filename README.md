@@ -78,7 +78,10 @@ The following environment variables are used in the project. Add them to a `.env
 
 - `BOT_TOKEN`: Token for the Telegram bot.
 - `SERVER_ADDRESS`: The URL of the server.
-- `OPENAI_KEY`: API key for OpenAI. 
+- `OPENAI_KEY`: API key for OpenAI.
+- `MONGO_USERNAME`: Username for MongoDB Atlas.
+- `MONGO_PASSWORD`: Password for MongoDB Atlas.
+- `MONGO_CLUSTER_URL`: Cluster URL for MongoDB Atlas. 
 
 ## How to run
 
