@@ -1,15 +1,18 @@
-from fastapi  import FastAPI, Request
-from server.controllers import topic_controller
+from fastapi import FastAPI, Request
+from server.controllers import topic_controller, question_route
 
 app = FastAPI()
 
 app.include_router(topic_controller.router)
+app.include_router(question_route.router, prefix="/questions", tags=["questions"])
+
 
 @app.middleware("http")
-async def log_req(request:Request, call_next):
+async def log_req(request: Request, call_next):
     print(f'got req. to: {request.url}, method: {request.method}')
     response = await call_next(request)
     return response
+
 
 @app.get("/")
 def root():
@@ -18,4 +21,5 @@ def root():
 
 if __name__ == "__main__":
     import uvicorn
+
     uvicorn.run(app, host="127.0.0.1", port=8000)

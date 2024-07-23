@@ -6,13 +6,15 @@ from dotenv import load_dotenv
 load_dotenv()
 client = OpenAI(api_key=os.getenv("OPENAI_KEY"))
 
+
 def get_openai_response(prompt):
     if not client.api_key:
         return {"error": "API key not provided. Please set the OPENAI_KEY environment variable."}, True
     try:
         chat_completion = client.chat.completions.create(
             messages=[
-                {"role": "system", "content": "You are a teacher teaching subject to student by asking good helpful questions."},
+                {"role": "system",
+                 "content": "You are a teacher teaching subject to student by asking good helpful questions."},
                 {"role": "user", "content": prompt}
             ],
             model="gpt-3.5-turbo",
