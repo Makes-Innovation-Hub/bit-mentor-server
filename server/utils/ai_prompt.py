@@ -9,5 +9,5 @@ def create_difficulty_question_and_answer_and_explanation(subject, difficulty):
 
 def create_question_and_answer_and_explanation(subject):
     return (f"Give me a question, answer, and explanation on {subject}. Return them in a dictionary format with the "
-            f"keys 'question' 'answer' 'explanation'. Limit the question length to 100 chars.")
+            f"keys 'question' 'answer' 'explanation'. Limit the question length to 100 chars. use double quotes for the dict keys")
 
