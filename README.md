@@ -7,7 +7,8 @@
 - [Diagram](#Diagram)  
 - [Project Folder Structure](#project-folder-structure)  
   
-## Team members: - Muhammad Sarahni    
+## Team members: 
+- Muhammad Sarahni    
 - Adam Kaabiya    
 - Najeeb Ibrahim    
 - Maysa Zbidat    
@@ -77,7 +78,9 @@ This structure helps keep your data interaction code organized and separated by 
 ## Enviroment variables   
 There needs to be an enviroment variable for the server link    
 SERVER_URL="URL"    
-  
+- `MONGO_USERNAME`: Username for MongoDB Atlas.
+- `MONGO_PASSWORD`: Password for MongoDB Atlas.
+- `MONGO_CLUSTER_URL`: Cluster URL for MongoDB Atlas. 
 ## How to run  
   
 In root directory, open terminal and run these commands    

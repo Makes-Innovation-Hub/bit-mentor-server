@@ -12,14 +12,14 @@ def get_db():
 
 class MongoDatabase:
     def __init__(self):
-        self.client = _check_mongo_connection()
+        self.client = check_mongo_connection()
         self.db = self.client["QuestDB"]
         self.questions_collection = self.db["Questions"]
         self.users_collection = self.db["Users"]
         self.topics_collection = self.db["Topics"]
 
 
-def _check_mongo_connection():
+def check_mongo_connection():
     username = os.getenv("MONGO_USERNAME")
     password = os.getenv("MONGO_PASSWORD")
     cluster_url = os.getenv("MONGO_CLUSTER_URL")
