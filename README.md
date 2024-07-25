@@ -109,7 +109,6 @@ This collection stores individual questions with relevant details:
 -   **Explanation**: An explanation of the correct answer.
 -   **Users Answered**: A list of users who have answered the question, with an indicator of whether their answer was correct.
 ```python
-Example:
 [
     {
         "topic": "python",
@@ -136,7 +135,6 @@ This collection stores data about individual users and their performance:
         -   **Questions Attempted**: Number of questions attempted.
         -   **Questions Correct**: Number of questions answered correctly.
 ```python
-Example:
 [
     {
         "tele_id": 123,
@@ -173,7 +171,6 @@ This collection tracks statistics for each topic
     -   **Questions Correct**: Total number of questions answered correctly.
 
 ```python
-Example
 [
     {
         "topic": "python",

@@ -1,7 +1,8 @@
 from fastapi import APIRouter, Response, status
-from server.utils.mongo_utils import check_mongo_connection
+from model.MongoDb import check_mongo_connection
 
 router = APIRouter()
+
 
 @router.get("/check-mongo-connection")
 def check_mongo(response: Response):

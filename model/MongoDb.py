@@ -23,14 +23,14 @@ def check_mongo_connection():
     username = os.getenv("MONGO_USERNAME")
     password = os.getenv("MONGO_PASSWORD")
     cluster_url = os.getenv("MONGO_CLUSTER_URL")
-
     if not all([username, password, cluster_url]):
-        raise EnvironmentError("MongoDB credentials are not set.")
+        raise KeyError("MongoDB credentials are not set/loaded correctly.")
 
     connection_string = f"mongodb+srv://{username}:{password}@{cluster_url}"
+    print(connection_string)
     try:
         client = MongoClient(connection_string)
         client.admin.command('ping')
-        return client
+        return {"status": "Connection to MongoDB successful!"}
     except Exception as e:
-        raise ConnectionError(f"Failed to connect to MongoDB: {str(e)}")
+        return {"error": str(e)}
