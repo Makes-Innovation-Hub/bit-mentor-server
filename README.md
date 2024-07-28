@@ -119,8 +119,8 @@ This collection stores individual questions with relevant details:
         "correct_answer_idx": 0,
         "explanation": "The sum function adds all elements in an iterable.",
         "users_answered": [
-            {"user_id": 123, "correct": True},
-            {"user_id": 124, "correct": False}
+            {"user_id": 123, "correct": True,  "time":2024-07-28T15:28:00.000+00:00, "user_answer":"str" },
+            {"user_id": 124, "correct": False, "time":2024-07-28T15:28:00.000+00:00, "user_answer":"str" }
         ]
     }
 ]
