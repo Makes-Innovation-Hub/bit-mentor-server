@@ -86,15 +86,20 @@ dynamically loads environment-specific settings such as database credentials and
 This structure helps keep your data interaction code organized and separated by functionality, making it easier to maintain and scale your application.
 
 ## Enviroment variables  
+* For Dev
 
-There needs to be an enviroment variable for the server link  
-SERVER_URL="URL"
+- `SERVER_URL_DEV`: Url of server.
+- `MONGO_USERNAME_DEV`: Username for MongoDB Atlas.
+- `MONGO_PASSWORD_DEV`: Password for MongoDB Atlas.
+- `MONGO_CLUSTER_DEV`: Cluster URL for MongoDB Atlas. 
+- `OPENAI_KEY_DEV`: API key for OpenAI services.
+* For Prod
 
-- `MONGO_USERNAME`: Username for MongoDB Atlas.
-- `MONGO_PASSWORD`: Password for MongoDB Atlas.
-- `MONGO_CLUSTER_URL`: Cluster URL for MongoDB Atlas. 
-
-
+- `SERVER_URL_DEV`: Url of server.
+- `MONGO_USERNAME_PROD`: Username for MongoDB Atlas.
+- `MONGO_PASSWORD_PROD`: Password for MongoDB Atlas.
+- `MONGO_CLUSTER_PROD`: Cluster URL for MongoDB Atlas. 
+- `OPENAI_KEY_PROD`: API key for OpenAI services.
 ## How to Run      
  In the root directory, open terminal and run these commands:        
 1.Install the required packages:    
