@@ -76,6 +76,13 @@ env includes:
 - OPENAI_KEY = open ai key
 
 ---
+
+### setting Folder
+The `setting/` folder contains configuration files.
+- **`config.py`**: 
+dynamically loads environment-specific settings such as database credentials and API keys based on the provided environment argument (dev or prod).
+
+---
 This structure helps keep your data interaction code organized and separated by functionality, making it easier to maintain and scale your application.
 
 ## Enviroment variables  
@@ -88,15 +95,25 @@ SERVER_URL="URL"
 - `MONGO_CLUSTER_URL`: Cluster URL for MongoDB Atlas. 
 
 
-## How to Run
+## How to Run      
+ In the root directory, open terminal and run these commands:        
+1.Install the required packages:    
 
-In the root directory, open terminal and run these commands:  
-```
-pip install -r requirements.txt
-python -m server.server
-```
+``` pip install -r requirements.txt ```
 
-To run tests use this command  
-```
-pytest
-```
+ 2.Run the server    
+* for Development    
+``` 
+python -m server.server --env dev 
+ ``` 
+ * or simply:    
+``` 
+python -m server.server  
+ ```
+ * for Production:    
+``` 
+python -m server.server --env prod
+ ``` 
+
+To run tests use this command      
+``` pytest ```
