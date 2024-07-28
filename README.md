@@ -111,6 +111,7 @@ This collection stores individual questions with relevant details:
 ```python
 [
     {
+        "type" : "open",
         "topic": "python",
         "difficulty": "easy",
         "question": "What does the sum function in Python do?",
