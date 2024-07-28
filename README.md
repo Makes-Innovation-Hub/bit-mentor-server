@@ -95,7 +95,7 @@ This structure helps keep your data interaction code organized and separated by 
 - `OPENAI_KEY_DEV`: API key for OpenAI services.
 * For Prod
 
-- `SERVER_URL_DEV`: Url of server.
+- `SERVER_URL_PROD`: Url of server.
 - `MONGO_USERNAME_PROD`: Username for MongoDB Atlas.
 - `MONGO_PASSWORD_PROD`: Password for MongoDB Atlas.
 - `MONGO_CLUSTER_PROD`: Cluster URL for MongoDB Atlas. 
