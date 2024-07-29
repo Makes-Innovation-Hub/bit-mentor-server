@@ -24,10 +24,12 @@ def create_question_with_multiple_options(request: QuestionRequest):
         f"Make sure the answers do not include any fluff. "
         f"Format the response like this: "
         f'{{"question_text": "Sample question?", '
-        f'"options": ["Option 1", "Option 2", "Option 3", "Option 4"], '
-        f'"details": ["Explanation for Option 1", "Explanation for Option 2", "Explanation for Option 3"'
-        f', "Explanation for Option 4"], '
-        f'"correct_answer": 1}}'
+        f'"options": ["Option 0", "Option 1", "Option 2", "Option 3"], '
+        f'"details": ["Explanation for Option 0", "Explanation for Option 1", "Explanation for Option 2", '
+        f'"Explanation for Option 3"], '
+        f'"correct_answer": 1}} '
+        f'The correct answer is the index in the array, so it should be in [0-{request.answers_count-1}] if'
+        f' the count is {request.answers_count}.'
     )
 
     if request.difficulty:
