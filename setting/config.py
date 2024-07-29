@@ -16,13 +16,17 @@ class Config:
         self.set_parameters()
 
     def load_environment(self):
-        if self.env == 'prod':
-            load_dotenv('.env_prod')
-            print("Loaded environment variables from .env_prod")
+        filepath = '.env_prod' if self.env == 'prod' else '.env_dev'
+        if os.path.exists(filepath):
+            if self.env == 'prod':
+                load_dotenv('.env_prod')
+                print("Loaded environment variables from .env_prod")
 
+            else:
+                load_dotenv('.env_dev')
+                print("Loaded environment variables from .env_dev")
         else:
-            load_dotenv('.env_dev')
-            print("Loaded environment variables from .env_dev")
+            raise FileNotFoundError(f"Environment file '{filepath}' not found.")
 
     def set_parameters(self):
         if self.env == 'prod':
@@ -46,6 +50,13 @@ try:
     parser.add_argument('--env', default='dev', choices=['dev', 'prod'], help="Specify the environment (dev or prod)")
     args = parser.parse_args()
     config = Config(args.env)
-    print(config.OPENAI_KEY,config.MONGO_PASSWORD,config.MONGO_USERNAME,config.MONGO_CLUSTER)
+    print(config.OPENAI_KEY, config.MONGO_PASSWORD, config.MONGO_USERNAME, config.MONGO_CLUSTER)
+
+
+except FileNotFoundError as e:
+    print(e)
+    exit(1)
+
 except EnvironmentError as e:
     print(e)
+    exit(1)
