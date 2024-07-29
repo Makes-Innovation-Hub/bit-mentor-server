@@ -1,36 +1,47 @@
-import pymongo
-import os
 from pymongo import MongoClient
-from dotenv import load_dotenv
+from pymongo.errors import ConnectionFailure
+from model.insert_queries import insert_question
 
-load_dotenv()
+# from dotenv import load_dotenv
 
-
-def get_db():
-    return MongoDatabase()
+# load_dotenv()
+# mongo_uri = os.getenv('MONGODB_URI')
+# database_name = os.getenv('DATABASE_NAME')
+# collection_name = os.getenv('COLLECTION_NAME')
 
 
 class MongoDatabase:
-    def __init__(self):
-        self.client = check_mongo_connection()
-        self.db = self.client["QuestDB"]
+    def __init__(self, uri, database_name):
+        self.uri = uri
+        self.client = MongoClient(uri)
+        self.database_name = database_name
+        self.db = self.client[database_name]
         self.questions_collection = self.db["Questions"]
-        self.users_collection = self.db["Users"]
-        self.topics_collection = self.db["Topics"]
+        self.users_collection = None
+        self.topics_collection = None
 
 
-def check_mongo_connection():
-    username = os.getenv("MONGO_USERNAME")
-    password = os.getenv("MONGO_PASSWORD")
-    cluster_url = os.getenv("MONGO_CLUSTER_URL")
-    if not all([username, password, cluster_url]):
-        raise KeyError("MongoDB credentials are not set/loaded correctly.")
+    def insert_question(self,collection_name,question_data):
+        if not self.client:
+            self.check_mongo_connection(self.uri,self.database_name)
+        try:
+            questions_collection = self.questions_collection
+            return insert_question(questions_collection,collection_name,self.database_name,question_data)
+        except Exception as e:
+            print(f"An error occurred while inserting data: {e}")
+            raise Exception(f"An error occurred while inserting data: {e}")
 
-    connection_string = f"mongodb+srv://{username}:{password}@{cluster_url}"
-    print(connection_string)
-    try:
-        client = MongoClient(connection_string)
-        client.admin.command('ping')
-        return {"status": "Connection to MongoDB successful!"}
-    except Exception as e:
-        return {"error": str(e)}
+
+
+    def check_mongo_connection(self):
+            try:
+                self.client.admin.command('ismaster')
+                print(f"MongoDB connection to database '{self.database_name}' successful!")
+                return {"message": f"MongoDB connection to database '{self.database_name}' successful!"}
+            except ConnectionFailure as e:
+                print(f"MongoDB connection failed: {e}")
+            except Exception as e:
+                print(f"An error occurred: {e}")
+
+
+
