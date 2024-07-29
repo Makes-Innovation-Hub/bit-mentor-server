@@ -1,24 +1,23 @@
-#class mongodb
-#instance
-import os
 from pymongo import MongoClient
-from dotenv import load_dotenv
+from pymongo.errors import ConnectionFailure
 
-load_dotenv()
 
-def check_mongo_connection():
-    username = os.getenv("MONGO_USERNAME")
-    password = os.getenv("MONGO_PASSWORD")
-    cluster_url = os.getenv("MONGO_CLUSTER_URL")
+class MongoDatabase:
+    def __init__(self, uri, database_name):
+        self.uri = uri
+        self.client = MongoClient(uri)
+        self.database_name = database_name
+        self.db = self.client[database_name]
+        self.questions_collection = self.db["Questions"]
+        self.users_collection = None
+        self.topics_collection = None
 
-    if not all([username, password, cluster_url]):
-        return {"error": "MongoDB credentials are not set."}
-
-    connection_string = f"mongodb+srv://{username}:{password}@{cluster_url}"
-    try:
-        client = MongoClient(connection_string)
-        client.admin.command('ping')
-        return {"status": "Connection to MongoDB successful!"}
-    except Exception as e:
-        return {"error": str(e)}
-
+    def check_mongo_connection(self):
+        try:
+            self.client.admin.command('ismaster')
+            print(f"MongoDB connection to database '{self.database_name}' successful!")
+            return {"message": f"MongoDB connection to database '{self.database_name}' successful!"}
+        except ConnectionFailure as e:
+            print(f"MongoDB connection failed: {e}")
+        except Exception as e:
+            print(f"An error occurred: {e}")
