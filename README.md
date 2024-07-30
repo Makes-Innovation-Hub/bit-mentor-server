@@ -76,27 +76,50 @@ env includes:
 - OPENAI_KEY = open ai key
 
 ---
+
+### setting Folder
+The `setting/` folder contains configuration files.
+- **`config.py`**: 
+dynamically loads environment-specific settings such as database credentials and API keys based on the provided environment argument (dev or prod).
+
+---
 This structure helps keep your data interaction code organized and separated by functionality, making it easier to maintain and scale your application.
 
 ## Enviroment variables  
+These files should be located in the root directory of your project
+* .env_dev For Dev
 
-There needs to be an enviroment variable for the server link  
-SERVER_URL="URL"
+- `SERVER_URL_DEV`: Url of server.
+- `MONGO_USERNAME_DEV`: Username for MongoDB Atlas.
+- `MONGO_PASSWORD_DEV`: Password for MongoDB Atlas.
+- `MONGO_CLUSTER_DEV`: Cluster URL for MongoDB Atlas. 
+- `OPENAI_KEY_DEV`: API key for OpenAI services.
+* .env_prod For Prod
 
-- `MONGO_USERNAME`: Username for MongoDB Atlas.
-- `MONGO_PASSWORD`: Password for MongoDB Atlas.
-- `MONGO_CLUSTER_URL`: Cluster URL for MongoDB Atlas. 
+- `SERVER_URL_PROD`: Url of server.
+- `MONGO_USERNAME_PROD`: Username for MongoDB Atlas.
+- `MONGO_PASSWORD_PROD`: Password for MongoDB Atlas.
+- `MONGO_CLUSTER_PROD`: Cluster URL for MongoDB Atlas. 
+- `OPENAI_KEY_PROD`: API key for OpenAI services.
+## How to Run      
+ In the root directory, open terminal and run these commands:        
+1.Install the required packages:    
 
+``` pip install -r requirements.txt ```
 
-## How to Run
+ 2.Run the server    
+* for Development    
+``` 
+python -m server.server --env dev 
+ ``` 
+ * or simply:    
+``` 
+python -m server.server  
+ ```
+ * for Production:    
+``` 
+python -m server.server --env prod
+ ``` 
 
-In the root directory, open terminal and run these commands:  
-```
-pip install -r requirements.txt
-python -m server.server
-```
-
-To run tests use this command  
-```
-pytest
-```
+To run tests use this command      
+``` pytest ```

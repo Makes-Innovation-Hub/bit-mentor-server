@@ -3,11 +3,15 @@ import os
 from openai import OpenAI
 from dotenv import load_dotenv
 
+from setting.config import *
+
+
 load_dotenv()
+
 
 def gen_openai_client():
     try:
-        openai_key = os.getenv("OPENAI_KEY")
+        openai_key = config.OPENAI_KEY
         if not openai_key:
             raise KeyError("OPEN AI key is not loaded")
         client = OpenAI(api_key=openai_key)
@@ -18,13 +22,15 @@ def gen_openai_client():
         print(f"error in connecting to open ai api. error: {str(e)}")
         raise e
 
-def get_openai_response(prompt:str) -> dict:
+
+def get_openai_response(prompt: str) -> dict:
     try:
         client = gen_openai_client()
         try:
             chat_completion = client.chat.completions.create(
                 messages=[
-                    {"role": "system", "content": "You are a teacher teaching subject to student by asking good helpful questions."},
+                    {"role": "system",
+                     "content": "You are a teacher teaching subject to student by asking good helpful questions."},
                     {"role": "user", "content": prompt}
                 ],
                 model="gpt-3.5-turbo",

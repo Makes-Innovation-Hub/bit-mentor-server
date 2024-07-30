@@ -1,15 +1,17 @@
-#class mongodb
-#instance
 import os
 from pymongo import MongoClient
 from dotenv import load_dotenv
 
+from setting.config import *
+
 load_dotenv()
 
+
 def check_mongo_connection():
-    username = os.getenv("MONGO_USERNAME")
-    password = os.getenv("MONGO_PASSWORD")
-    cluster_url = os.getenv("MONGO_CLUSTER_URL")
+    username = config.MONGO_USERNAME
+    password = config.MONGO_PASSWORD
+    cluster_url = config.MONGO_CLUSTER
+    print(username, password, cluster_url)
 
     if not all([username, password, cluster_url]):
         return {"error": "MongoDB credentials are not set."}
@@ -21,4 +23,3 @@ def check_mongo_connection():
         return {"status": "Connection to MongoDB successful!"}
     except Exception as e:
         return {"error": str(e)}
-
