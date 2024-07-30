@@ -86,14 +86,15 @@ dynamically loads environment-specific settings such as database credentials and
 This structure helps keep your data interaction code organized and separated by functionality, making it easier to maintain and scale your application.
 
 ## Enviroment variables  
-* For Dev
+These files should be located in the root directory of your project
+* .env_dev For Dev
 
 - `SERVER_URL_DEV`: Url of server.
 - `MONGO_USERNAME_DEV`: Username for MongoDB Atlas.
 - `MONGO_PASSWORD_DEV`: Password for MongoDB Atlas.
 - `MONGO_CLUSTER_DEV`: Cluster URL for MongoDB Atlas. 
 - `OPENAI_KEY_DEV`: API key for OpenAI services.
-* For Prod
+* .env_prod For Prod
 
 - `SERVER_URL_PROD`: Url of server.
 - `MONGO_USERNAME_PROD`: Username for MongoDB Atlas.
