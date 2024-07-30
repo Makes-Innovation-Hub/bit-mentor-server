@@ -1,31 +1,38 @@
-from fastapi import APIRouter, HTTPException
-from data_types.gen_question_body import QuestionRequest, QuestionResponse
-from server.utils.ai_prompt import create_question_with_multiple_options
+from fastapi import HTTPException, APIRouter
+
+from server.utils.ai_prompt import generate_question_with_multiple_options
 from server.utils.open_ai import get_openai_response
+from server.utils.ai_prompt import generate_question_prompt
+from data_types.question_models import QuestionRequest, QuestionResponse
+from server.utils.question_processing import process_question_request
 
 router = APIRouter()
 
 
-@router.post("/question", response_model=QuestionResponse)
-async def generate_question(request: QuestionRequest):
+@router.post("/", response_model=QuestionResponse)
+async def generate_question(question: QuestionRequest, with_options: bool = False):
     try:
+        if with_options and question.answers_count == 0:
+            raise HTTPException(status_code=400, detail="If 'with_options' is True, 'answers_count' must be greater "
+                                                        "than 0.")
+        if not with_options and question.answers_count > 0:
 
-        prompt = create_question_with_multiple_options(request)
-        response = get_openai_response(prompt)
+            raise HTTPException(status_code=400, detail="If 'with_options' is False, 'answers_count' must be 0.")
+
+        if with_options:
+            prompt = generate_question_with_multiple_options(question)
+        else:
+            prompt = generate_question_prompt(question)
+
+        # Get response data from OpenAI
+        result = get_openai_response(prompt)
 
         # Extract the response data
-        question_text = response["question_text"]
-        options = response["options"]
-        details = response["details"]
-        correct_answer = response["correct_answer"]
+        question_response = process_question_request(result,with_options)
+        return question_response
 
-        return QuestionResponse(
-            question_text=question_text,
-            options=options,
-            details=details,
-            correct_answer=correct_answer
-        )
     except KeyError as e:
         raise HTTPException(status_code=500, detail=f"Missing key in response data: {str(e)}")
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"An error occurred: {str(e)}")
+        raise HTTPException(status_code=400, detail=f"An error occurred: {str(e)}")
+
