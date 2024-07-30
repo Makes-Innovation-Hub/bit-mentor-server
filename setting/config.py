@@ -50,8 +50,6 @@ try:
     parser.add_argument('--env', default='dev', choices=['dev', 'prod'], help="Specify the environment (dev or prod)")
     args = parser.parse_args()
     config = Config(args.env)
-    print(config.OPENAI_KEY, config.MONGO_PASSWORD, config.MONGO_USERNAME, config.MONGO_CLUSTER)
-
 
 except FileNotFoundError as e:
     print(e)
