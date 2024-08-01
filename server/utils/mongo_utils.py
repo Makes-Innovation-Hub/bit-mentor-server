@@ -10,6 +10,7 @@ def check_mongo_connection():
     cluster_url = os.getenv("MONGO_CLUSTER_URL")
 
     if not all([username, password, cluster_url]):
+
         raise KeyError("MongoDB credentials are not set/loaded correctly.")
 
     connection_string = f"mongodb+srv://{username}:{password}@{cluster_url}"
