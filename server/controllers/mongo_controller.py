@@ -11,7 +11,6 @@ load_dotenv()
 
 router = APIRouter()
 
-# Initialize MongoDatabase instance
 mongo_uri = os.getenv('MONGODB_URI')
 database_name = os.getenv('DATABASE_NAME')
 mongo_db = MongoDatabase(mongo_uri, database_name)

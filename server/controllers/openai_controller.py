@@ -8,13 +8,10 @@ from server.utils.logger import app_logger, generate_request_id
 
 router = APIRouter()
 
+
 @router.post("/generate-question")
 async def generate_question(body: GenQuestionBody, response: Response):
-    request_id = generate_request_id()
-    app_logger.addFilter(RequestIdFilter(request_id))
-
     app_logger.info(f"Received request to generate question with body: {body.dict()}")
-
     try:
         prompt = generate_question_prompt(body.topic, body.difficulty)
         app_logger.info(f"Generated prompt: {prompt}")
@@ -34,6 +31,3 @@ async def generate_question(body: GenQuestionBody, response: Response):
         app_logger.error(f"An unexpected error occurred: {str(e)}")
         response.status_code = status.HTTP_400_BAD_REQUEST
         return {"error": str(e)}
-
-    finally:
-        app_logger.removeFilter(RequestIdFilter(request_id))

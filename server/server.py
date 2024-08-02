@@ -1,9 +1,11 @@
 from fastapi import FastAPI, Request, Response
 
+from server.controllers import mongo_controller, openai_controller
 from server.utils.logger import app_logger, RequestIdFilter, generate_request_id
 
 app = FastAPI()
-
+app.include_router(openai_controller.router)
+app.include_router(mongo_controller.router)
 
 @app.middleware("http")
 async def log_req(request: Request, call_next):
