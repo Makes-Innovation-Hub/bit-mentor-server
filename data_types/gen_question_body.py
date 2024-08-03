@@ -18,3 +18,12 @@ class QuestionResponse(BaseModel):
     options: List[str]
     details: List[str]
     correct_answer: int
+
+class AnswerCheckRequest(BaseModel):
+    question: str
+    user_answer: str
+
+class OpenQuestionResponse(BaseModel):
+    question:str
+    answer:str
+    explanation:str
