@@ -2,13 +2,6 @@ from pymongo import MongoClient
 from pymongo.errors import ConnectionFailure
 from model.insert_queries import insert_question
 
-# from dotenv import load_dotenv
-
-# load_dotenv()
-# mongo_uri = os.getenv('MONGODB_URI')
-# database_name = os.getenv('DATABASE_NAME')
-# collection_name = os.getenv('COLLECTION_NAME')
-
 
 class MongoDatabase:
     def __init__(self, uri, database_name):
