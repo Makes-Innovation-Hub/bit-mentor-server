@@ -9,11 +9,10 @@ load_dotenv()
 
 router = APIRouter()
 
-# Initialize MongoDatabase instance
 mongo_uri = os.getenv('MONGO_CLUSTER_URL')
 database_name = os.getenv('DATABASE_NAME')
 mongo_db = MongoDatabase(mongo_uri, database_name)
-# questions_collection = os.
+
 
 @router.get("/check-mongo-connection")
 def check_mongo(response: Response):
@@ -42,4 +41,3 @@ def insert_question(question_data: dict, response: Response):
         return {"error": str(e)}
     
 
- 

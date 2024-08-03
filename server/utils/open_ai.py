@@ -3,12 +3,15 @@ import os
 from openai import OpenAI
 from dotenv import load_dotenv
 
+from setting.config import *
+
+
 load_dotenv()
 
 
 def gen_openai_client():
     try:
-        openai_key = os.getenv("OPENAI_KEY")
+        openai_key = config.OPENAI_KEY
         if not openai_key:
             raise KeyError("OPEN AI key is not loaded")
         client = OpenAI(api_key=openai_key)

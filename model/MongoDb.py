@@ -2,7 +2,6 @@ from pymongo import MongoClient
 from pymongo.errors import ConnectionFailure
 from model.insert_queries import insert_question
 
-
 class MongoDatabase:
     def __init__(self, uri, database_name):
         self.uri = uri
@@ -24,8 +23,6 @@ class MongoDatabase:
             print(f"An error occurred while inserting data: {e}")
             raise Exception(f"An error occurred while inserting data: {e}")
 
-
-
     def check_mongo_connection(self):
             try:
                 self.client.admin.command('ismaster')
@@ -35,6 +32,4 @@ class MongoDatabase:
                 print(f"MongoDB connection failed: {e}")
             except Exception as e:
                 print(f"An error occurred: {e}")
-
-
 
