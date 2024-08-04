@@ -17,6 +17,12 @@ def connect_to_youtube_api():
 
 
 def fetch_youtube_links(youtube, topic: str, video_length: str):
+    if not topic:
+        raise HTTPException(status_code=400, detail="Topic cannot be an empty string")
+
+        # Validate video_length
+    if video_length not in ["short", "medium", "long"]:
+        raise HTTPException(status_code=400, detail="Video length must be one of 'short', 'medium', or 'long'")
     try:
         request = youtube.search().list(
             part='snippet',
@@ -26,7 +32,6 @@ def fetch_youtube_links(youtube, topic: str, video_length: str):
             maxResults=5
         )
         response = request.execute()
-
         video_links = [
             f"https://www.youtube.com/watch?v={item['id']['videoId']}"
             for item in response['items']
@@ -35,4 +40,4 @@ def fetch_youtube_links(youtube, topic: str, video_length: str):
     except HttpError as e:
         raise HTTPException(status_code=400, detail=f"An HTTP error occurred while fetching YouTube links: {e}")
     except Exception as e:
-        raise HTTPException(status_code=400, detail=f"An error occurred while fetching YouTube links: {e}")
+        raise HTTPException(status_code=500, detail=f"An error occurred while fetching YouTube links: {e}")

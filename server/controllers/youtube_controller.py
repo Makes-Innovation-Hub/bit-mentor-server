@@ -6,7 +6,7 @@ router = APIRouter()
 
 
 @router.get("/")
-def get_youtube_links(topic: str, video_length: str):
+def get_youtube_links(topic: str = "", video_length: str = ""):
     # Validate topic
     if not topic:
         raise HTTPException(status_code=400, detail="Topic cannot be an empty string")
