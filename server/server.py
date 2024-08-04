@@ -1,10 +1,10 @@
 from fastapi import FastAPI, Request
-from server.controllers import mongo_controller, question_controller
+from server.controllers import mongo_controller, question_controller,youtube_controller
 
 app = FastAPI()
 app.include_router(mongo_controller.router)
 app.include_router(question_controller.router, prefix="/questions", tags=["questions"])
-
+app.include_router(youtube_controller.router, prefix="/youtube", tags=["youtube"])
 
 @app.middleware("http")
 async def log_req(request: Request, call_next):

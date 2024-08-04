@@ -1,9 +1,8 @@
 from fastapi.testclient import TestClient
 from server.server import app
-from constants import QUESTION_URL
 
 client = TestClient(app)
-
+QUESTION_URL="questions/"
 
 def test_generate_question_with_answers_success():
     request_payload = {
