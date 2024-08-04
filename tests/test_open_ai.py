@@ -3,6 +3,7 @@ from server.utils.ai_prompt import generate_question_prompt
 from fastapi.testclient import TestClient
 from server.server import app
 
+
 def test_get_openai_response_contains_keys():
     prompt = generate_question_prompt("python")
     response = get_openai_response(prompt)
@@ -12,10 +13,12 @@ def test_get_openai_response_contains_keys():
     assert "explanation" in response
     assert "fake" not in response
 
+
 client = TestClient(app)
 
+
 def test_generate_question():
-    response = client.post("/generate-question",json={"topic":"python"},)
+    response = client.post("/generate-question", json={"topic": "python"}, )
     assert response.status_code == 200
     result = response.json()
     assert "question" in result

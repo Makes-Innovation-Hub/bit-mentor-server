@@ -1,16 +1,13 @@
 import json
-import os
 from openai import OpenAI
-from dotenv import load_dotenv
-
+from setting.config import *
 from server.utils.logger import app_logger
 
-load_dotenv()
 
 
 def gen_openai_client():
     try:
-        openai_key = os.getenv("OPENAI_KEY")
+        openai_key = config.OPENAI_KEY
         if not openai_key:
             app_logger.error("OPEN AI key is not loaded")
             raise KeyError("OPEN AI key is not loaded")

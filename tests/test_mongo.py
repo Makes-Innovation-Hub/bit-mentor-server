@@ -1,18 +1,12 @@
 import unittest
 import os
-
-from dotenv import load_dotenv
-
+from setting.config import *
 from model.MongoDb import MongoDatabase
 
-load_dotenv()
-
-
-
-# Initialize MongoDatabase instance
-mongo_uri = os.getenv('MONGODB_URI')
-database_name = os.getenv('DATABASE_NAME')
+mongo_uri = config.MONGO_CLUSTER
+database_name = config.DATABASE_NAME
 mongo_db = MongoDatabase(mongo_uri, database_name)
+
 
 class TestMongoConnection(unittest.TestCase):
     def test_check_mongo_connection(self):
@@ -24,3 +18,4 @@ class TestMongoConnection(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
