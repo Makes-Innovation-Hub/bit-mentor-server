@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  app:
+    environment:
+      - ENV=prod
+      - MONGO_USERNAME_PROD=${MONGO_USERNAME_PROD}
+      - MONGO_PASSWORD_PROD=${MONGO_PASSWORD_PROD}
+      - MONGO_CLUSTER_PROD=${MONGO_CLUSTER_PROD}
+      - OPENAI_KEY_PROD=${OPENAI_KEY_PROD}
+    env_file:
+      - .env_prod
+
+  mongo:
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}
+    env_file:
+      - .env_prod
