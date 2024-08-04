@@ -2,13 +2,6 @@ from pymongo import MongoClient
 from pymongo.errors import ConnectionFailure
 from model.insert_queries import *
 
-# from dotenv import load_dotenv
-
-# load_dotenv()
-# mongo_uri = os.getenv('MONGODB_URI')
-# database_name = os.getenv('DATABASE_NAME')
-# collection_name = os.getenv('COLLECTION_NAME')
-
 
 class MongoDatabase:
     def __init__(self, uri, database_name):
@@ -19,7 +12,6 @@ class MongoDatabase:
         self.questions_collection = self.db["Questions"]
         self.users_answers_collection = self.db["Users"]
         self.stats_collection = self.db["stats"]
-
 
     def insert_question(self,collection_name,question_data):
         if not self.client:
@@ -38,8 +30,6 @@ class MongoDatabase:
         upsert=True
     )
 
-        
-
     def save_user_answer(self,collection_name, user_answer):
         if not self.client:
             self.check_mongo_connection(self.uri,self.database_name)
@@ -50,8 +40,6 @@ class MongoDatabase:
             print(f"An error occurred while inserting data: {e}")
             raise Exception(f"An error occurred while inserting data: {e}")
         
-
-
     def check_mongo_connection(self):
             try:
                 self.client.admin.command('ismaster')

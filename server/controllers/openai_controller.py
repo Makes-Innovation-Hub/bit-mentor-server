@@ -3,12 +3,9 @@ from server.utils.open_ai import get_openai_response
 from server.utils.ai_prompt import generate_question_prompt
 from data_types.gen_question_body import *
 import requests
-import os
-from dotenv import load_dotenv
-
-load_dotenv()
+from setting.config import *
 router = APIRouter()
-from pydantic import BaseModel
+
 
 
 
@@ -37,7 +34,7 @@ def generate_question(body: GenQuestionBody, response :Response):
 
 @router.post("/check_answer")
 def check_user_answer(request:AnswerCheckRequest):
-    openai_key = os.getenv("OPENAI_KEY")
+    openai_key = config.OPENAI_KEY
     if not openai_key:
         raise HTTPException(status_code=500, detail="OpenAI API key is not loaded")
 
@@ -52,7 +49,6 @@ def check_user_answer(request:AnswerCheckRequest):
             {"role": "system", "content": "You are a helpful assistant."},
             {"role": "user", "content": prompt}
         ],
-        "max_tokens": 10
     }
     try:
         response = requests.post("https://api.openai.com/v1/chat/completions", headers=headers, json=data)

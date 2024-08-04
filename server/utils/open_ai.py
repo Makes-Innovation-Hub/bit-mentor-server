@@ -1,12 +1,8 @@
 import json
-import os
 from openai import OpenAI
-from dotenv import load_dotenv
-
 from setting.config import *
 
 
-load_dotenv()
 
 
 def gen_openai_client():
