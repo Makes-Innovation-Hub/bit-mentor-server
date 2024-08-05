@@ -1,19 +1,25 @@
 import unittest
-import os
+from pymongo.errors import ConnectionFailure
+from model.MongoDb import MongoDatabase 
 from setting.config import *
-from model.MongoDb import MongoDatabase
 
-mongo_uri = config.MONGO_CLUSTER
-database_name = config.DATABASE_NAME
-mongo_db = MongoDatabase(mongo_uri, database_name)
+class TestMongoDatabase(unittest.TestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        # Connect to the test MongoDB instance
+        cls.test_uri = config.MONGO_CLUSTER 
+        cls.test_db_name = config.DATABASE_NAME
+        cls.mongo_database = MongoDatabase(cls.test_uri, cls.test_db_name)
 
 
-class TestMongoConnection(unittest.TestCase):
     def test_check_mongo_connection(self):
-        result = mongo_db.check_mongo_connection()
-        print(result)
-        self.assertIn("status", result)
-        self.assertEqual(result["status"], "Connection to MongoDB successful!")
+        # Test connection to the database
+        try:
+            result = self.mongo_database.check_mongo_connection()
+            self.assertEqual(result, {"message": f"MongoDB connection to database '{self.test_db_name}' successful!"})
+        except ConnectionFailure:
+            self.fail("MongoDB connection failed")
 
 
 if __name__ == '__main__':

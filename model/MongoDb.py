@@ -25,7 +25,7 @@ class MongoDatabase:
             raise Exception(f"An error occurred while inserting data: {e}")
     
     def update_user_stat(self, user_id, update_fields):
-        self.db.users.update_one(
+        self.stats_collection.update_one(
         {'user_id': user_id},
         {'$inc': update_fields},
         upsert=True
