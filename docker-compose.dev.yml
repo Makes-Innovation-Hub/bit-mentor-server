@@ -1,24 +1,23 @@
-version: '3.8'
-
 services:
   app:
-    build: .
-    ports:
-      - "8000:8000"
+    environment:
+      - ENV=dev
+      - SERVER_URL_DEV=${SERVER_URL_DEV}
+      - OPENAI_KEY_DEV=${OPENAI_KEY_DEV}
+      - DATABASE_NAME_DEV=${DATABASE_NAME_DEV}
+      - COLLECTION_NAME_DEV=${COLLECTION_NAME_DEV}
+      - MONGO_USERNAME_DEV=${MONGO_USERNAME_DEV}
+      - MONGO_PASSWORD_DEV=${MONGO_PASSWORD_DEV}
+      - MONGO_CLUSTER_DEV=${MONGO_CLUSTER_DEV}
+      - MONGO_URI_DEV=${MONGO_URI_DEV}
     env_file:
       - .env_dev
-    depends_on:
-      - mongo
-    volumes:
-      - .:/app
 
   mongo:
     image: mongo:latest
-    ports:
-      - "27017:27017"
     environment:
-      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
-      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_USERNAME_DEV}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_PASSWORD_DEV}
     volumes:
       - mongo-data:/data/db
 
