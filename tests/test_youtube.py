@@ -15,22 +15,28 @@ client = TestClient(app)
 # missing topic input
 def test_get_youtube_links_missing_topic():
     response = client.get("youtube/?video_length=medium")
-    assert response.status_code == 400
-    assert response.json() == {"detail": "Topic cannot be an empty string"}
+    assert response.status_code == 422  # Unprocessable Entity
+    assert "detail" in response.json()
+    assert response.json()["detail"][0]["msg"] == "Field required"
+    assert response.json()["detail"][0]["input"]  is None
 
 
 # missing video length input
 def test_get_youtube_links_missing_video_length():
     response = client.get("youtube/?topic=Python")
-    assert response.status_code == 400
-    assert response.json() == {"detail": "Video length must be one of 'short', 'medium', or 'long'"}
+    assert response.status_code == 422  # Unprocessable Entity
+    assert "detail" in response.json()
+    assert response.json()["detail"][0]["msg"] == "Field required"
+    assert response.json()["detail"][0]["input"] is None
 
 
 # missing topic and video length inputs
 def test_get_youtube_links_missing_both():
     response = client.get("youtube/")
-    assert response.status_code == 400  # Unprocessable Entity
+    assert response.status_code == 422  # Unprocessable Entity
     assert "detail" in response.json()
+    assert response.json()["detail"][0]["msg"] == "Field required"
+    assert response.json()["detail"][0]["input"]  is None
 
 
 def test_fetch_youtube_links_missing_topic():

@@ -1,3 +1,5 @@
+from typing import List
+
 from fastapi import HTTPException, APIRouter
 from googleapiclient.errors import HttpError
 from server.utils.youtube import connect_to_youtube_api, fetch_youtube_links
@@ -5,8 +7,19 @@ from server.utils.youtube import connect_to_youtube_api, fetch_youtube_links
 router = APIRouter()
 
 
-@router.get("/")
-def get_youtube_links(topic: str = "", video_length: str = ""):
+@router.get("/", response_model=List[str])
+def get_youtube_links(topic: str, video_length: str) -> List[str]:
+    """
+    Fetch YouTube video links based on a given topic and video length.
+
+    Args:
+        topic (str): The topic to fetch video links for. Must be a non-empty string.
+        video_length (str): The length category of the videos to fetch. Must be one of 'short', 'medium', or 'long'.
+
+    Returns:
+        List[str]: A list of URLs as strings.
+    """
+
     # Validate topic
     if not topic:
         raise HTTPException(status_code=400, detail="Topic cannot be an empty string")

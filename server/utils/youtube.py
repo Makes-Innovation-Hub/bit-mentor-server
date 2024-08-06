@@ -1,11 +1,13 @@
+from typing import List
+
 from fastapi import HTTPException
-from googleapiclient.discovery import build
+from googleapiclient.discovery import build, Resource
 from googleapiclient.errors import HttpError
 
 from setting.config import config
 
 
-def connect_to_youtube_api():
+def connect_to_youtube_api() -> Resource:
     try:
         youtube = build('youtube', 'v3', developerKey=config.YOUTUBE_API)
         youtube.channels().list(part='id', forUsername='GoogleDevelopers').execute()
@@ -16,7 +18,7 @@ def connect_to_youtube_api():
         return None
 
 
-def fetch_youtube_links(youtube, topic: str, video_length: str):
+def fetch_youtube_links(youtube: Resource, topic: str, video_length: str) -> List[str]:
     if not topic:
         raise HTTPException(status_code=400, detail="Topic cannot be an empty string")
 
