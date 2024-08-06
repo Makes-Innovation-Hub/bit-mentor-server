@@ -2,6 +2,7 @@ from data_types.question_models import QuestionRequest
 
 
 def generate_question_prompt(question: QuestionRequest) -> str:
+    print("generate_open_question")
     prompt = f"Give me a {question.difficulty} technical question, answer and explanation on  the topic: " \
              f"{question.subject}."
     prompt += """

@@ -19,6 +19,7 @@ class QuestionResponse(BaseModel):
     options: List[str]
     details: List[str]
     correct_answer: int
+    answer: str
 
 class AnswerCheckRequest(BaseModel):
     question: str
