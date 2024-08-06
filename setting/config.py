@@ -1,10 +1,7 @@
 import argparse
 import os
-import sys
 
 from dotenv import load_dotenv
-
-
 class Config:
     def __init__(self, env: str):
         self.env = env
