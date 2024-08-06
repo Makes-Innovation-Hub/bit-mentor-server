@@ -1,9 +1,9 @@
 from data_types.question_models import QuestionResponse
 
 
-def process_question_request(result,with_options):
+def process_question_request(result,with_answers):
 
-    if with_options:
+    if with_answers:
         question_text = result["question_text"]
         options = result["options"]
         details = result["details"]

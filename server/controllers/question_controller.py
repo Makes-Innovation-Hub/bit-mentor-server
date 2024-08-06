@@ -10,25 +10,18 @@ router = APIRouter()
 
 
 @router.post("/", response_model=QuestionResponse)
-async def generate_question(question: QuestionRequest, with_options: bool = False):
+async def generate_question(question: QuestionRequest):
     try:
-        if with_options and question.answers_count == 0:
-            raise HTTPException(status_code=400, detail="If 'with_options' is True, 'answers_count' must be greater "
-                                                        "than 0.")
-        if not with_options and question.answers_count > 0:
-
-            raise HTTPException(status_code=400, detail="If 'with_options' is False, 'answers_count' must be 0.")
-
-        if with_options:
+        with_answers = True if question.answers_count and question.answers_count > 0 else False
+        if with_answers:
             prompt = generate_question_with_multiple_options(question)
         else:
             prompt = generate_question_prompt(question)
 
         # Get response data from OpenAI
         result = get_openai_response(prompt)
-
         # Extract the response data
-        question_response = process_question_request(result,with_options)
+        question_response = process_question_request(result,with_answers)
         return question_response
 
     except KeyError as e:

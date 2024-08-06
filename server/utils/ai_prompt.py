@@ -29,7 +29,6 @@ def generate_question_with_multiple_options(question: QuestionRequest) -> str:
         f'"details": ["Explanation for Option 0", "Explanation for Option 1", "Explanation for Option 2", '
         f'"Explanation for Option 3"], '
         f'"correct_answer": the index of the correct option}}'
-
     )
 
     return prompt
