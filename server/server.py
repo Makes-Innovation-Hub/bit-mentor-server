@@ -4,11 +4,10 @@ from server.controllers import mongo_controller, openai_controller, question_con
 
 
 
+
 app = FastAPI()
-app.include_router(openai_controller.router)
 app.include_router(mongo_controller.router)
 app.include_router(question_controller.router, prefix="/questions", tags=["questions"])
-
 
 
 @app.middleware("http")

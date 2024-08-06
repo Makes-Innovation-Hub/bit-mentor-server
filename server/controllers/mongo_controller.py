@@ -4,6 +4,9 @@ from server.utils.logger import app_logger
 from model.MongoDb import MongoDatabase 
 from setting.config import *
 from pymongo.errors import ConnectionFailure
+from model.MongoDb import check_mongo_connection
+
+
 
 
 router = APIRouter()
