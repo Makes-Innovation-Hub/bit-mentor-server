@@ -10,7 +10,7 @@ class GenQuestionBody(BaseModel):
 class QuestionRequest(BaseModel):
     subject: str
     difficulty: str
-    answers_count: int
+    answers_count: int | None = None
 
 
 class QuestionResponse(BaseModel):
