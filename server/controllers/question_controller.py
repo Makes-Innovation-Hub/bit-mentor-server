@@ -1,5 +1,4 @@
 from fastapi import HTTPException, APIRouter
-
 from server.utils.ai_prompt import generate_question_with_multiple_options
 from server.utils.open_ai import get_openai_response
 from server.utils.ai_prompt import generate_question_prompt
