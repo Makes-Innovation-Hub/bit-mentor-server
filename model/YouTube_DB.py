@@ -38,7 +38,7 @@ class YouTubeService:
                 "watched": {
                     category: {
                         "length": {
-                            "short": [],
+                            "short": ["https://www.youtube.com/watch?v=fake7"],
                             "medium": [],
                             "long": []
                         }
@@ -56,6 +56,26 @@ class YouTubeService:
             upsert=True
         )
         return {"message": "Fake URLs added successfully"}
+
+    def find_youtube_links_by_topic_and_length(self, topic: str, length: str):
+        document = self.youtube_links_collection.find_one({'topic': topic})
+        urls = []
+        for url in document["length"][length]:
+            urls.append(url)
+        return urls
+
+    def link_exists_in_user_watched(self, user_id: str, topic: str, length: str, video_url: str) -> bool:
+        user_data = self.user_watched_links_collection.find_one({"user_id": user_id})
+        if user_data and video_url in user_data["watched"][topic]["length"][length]:
+            return True
+        return False
+
+    def update_user_stats(self, user_id: str, topic: str, length: str, video_url: str) -> bool:
+        update_result = self.user_watched_links_collection.update_one(
+            {"user_id": user_id},
+            {"$push": {f"watched.{topic}.length.{length}": video_url}}
+        )
+        return update_result.modified_count > 0
 
 
 def check_mongo_connection():

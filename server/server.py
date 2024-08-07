@@ -2,15 +2,14 @@ from fastapi import FastAPI, Request, Response
 
 from model.YouTube_DB import get_db
 from server.utils.logger import app_logger, RequestIdFilter, generate_request_id
-from server.controllers import mongo_controller, openai_controller, question_controller
-
-
-
+from server.controllers import mongo_controller, openai_controller, question_controller,youtube_controller
 
 app = FastAPI()
 app.include_router(mongo_controller.router)
 app.include_router(question_controller.router, prefix="/questions", tags=["questions"])
+app.include_router(youtube_controller.router, prefix="/youtube", tags=["youtube"])
 app.include_router(openai_controller.router)
+
 
 @app.middleware("http")
 async def log_req(request: Request, call_next):
