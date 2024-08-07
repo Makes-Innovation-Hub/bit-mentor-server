@@ -94,6 +94,7 @@ These files should be located in the root directory of your project
 - `MONGO_PASSWORD_DEV`: Password for MongoDB Atlas.
 - `MONGO_CLUSTER_DEV`: Cluster URL for MongoDB Atlas. 
 - `OPENAI_KEY_DEV`: API key for OpenAI services.
+-  `MONGO_CONNECTION_STRING_DEV`: full URL for mongo atlas
 * .env_prod For Prod
 
 - `SERVER_URL_PROD`: Url of server.
@@ -101,6 +102,7 @@ These files should be located in the root directory of your project
 - `MONGO_PASSWORD_PROD`: Password for MongoDB Atlas.
 - `MONGO_CLUSTER_PROD`: Cluster URL for MongoDB Atlas. 
 - `OPENAI_KEY_PROD`: API key for OpenAI services.
+-  `MONGO_CONNECTION_STRING_PROD`: full URL for mongo atlas
 
 ## How to Run      
  In the root directory, open terminal and run these commands:        
@@ -225,4 +227,92 @@ This collection tracks statistics for each topic
 
 ```
 
+---
 
+
+## YouTube Links Structure
+
+The following JSON structure outlines the YouTube links categorized by topics and video lengths:
+
+```json
+[
+    {
+        "topic": "Python",
+        "length": {
+            "short": [
+                {"url": "https://www.youtube.com/watch?v=fake1"},
+                {"url": "https://www.youtube.com/watch?v=fake2"}
+            ],
+            "medium": [
+                {"url": "https://www.youtube.com/watch?v=fake3"},
+                {"url": "https://www.youtube.com/watch?v=fake4"}
+            ],
+            "long": [
+                {"url": "https://www.youtube.com/watch?v=fake5"},
+                {"url": "https://www.youtube.com/watch?v=fake6"}
+            ]
+        }
+    },
+    {
+        "topic": "SQL",
+        "length": {
+            "short": [
+                {"url": "https://www.youtube.com/watch?v=fake7"},
+                {"url": "https://www.youtube.com/watch?v=fake8"}
+            ],
+            "medium": [
+                {"url": "https://www.youtube.com/watch?v=fake9"},
+                {"url": "https://www.youtube.com/watch?v=fake10"}
+            ],
+            "long": [
+                {"url": "https://www.youtube.com/watch?v=fake11"},
+                {"url": "https://www.youtube.com/watch?v=fake12"}
+            ]
+        }
+    }
+]
+
+## User Watched Links Structure
+The following JSON structure keeps track of which links each user has watched, categorized by topics and lengths:
+{
+    "user_id": "user1": { 
+        "watched": {
+            "Python": {
+                "length": {
+                    "short": [
+                        {"url": "https://www.youtube.com/watch?v=fake1"}
+                    ],
+                    "medium": [],
+                    "long": []
+                }
+            },
+            "SQL": {
+                "length": {
+                    "short": [],
+                    "medium": [],
+                    "long": []
+                }
+            }
+        }
+    },
+    "user_id":user2": {  
+        "watched": {
+            "Python": {
+                "length": {
+                    "short": [],
+                    "medium": [],
+                    "long": []
+                }
+            },
+            "SQL": {
+                "length": {
+                    "short": [],
+                    "medium": [],
+                    "long": []
+                }
+            }
+        }
+    }
+}
+BASIC TOPICS
+CATEGORIES = ["MongoDB", "SQL", "Databases", "System Design", "Data Structures", "Algorithms", "Python"]
