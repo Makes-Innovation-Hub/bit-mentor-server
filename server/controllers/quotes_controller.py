@@ -5,8 +5,8 @@ from setting.config import *
 
 router = APIRouter()
 
-@router.get("/quote")
-def root():
+@router.get("/quote/{user_id}")
+def get_quote(user_id: int):
     """
     Retrieves a random quote from the API.
     This function sends a GET request to the API endpoint 'https://api.api-ninjas.com/v1/quotes'
