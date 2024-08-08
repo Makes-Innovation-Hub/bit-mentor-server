@@ -59,13 +59,14 @@ class YouTubeService:
             self.user_watched_links_collection.insert_one(user_data)
             return user_data
 
-    def add_fake_urls_to_python(self):
+    def add_fake_urls_to_python(self): # avoid duplicate
         fake_urls = [f"https://www.youtube.com/watch?v=fake{i}" for i in range(1, 21)]
-        self.youtube_links_collection.update_one(
-            {"topic": "Python"},
-            {"$push": {"length.short": {"$each": fake_urls}}},
-            upsert=True
-        )
+        for url in fake_urls:
+            self.youtube_links_collection.update_one(
+                {"topic": "Python"},
+                {"$addToSet": {"length.short": url}},
+                upsert=True
+            )
         return {"message": "Fake URLs added successfully"}
 
     def find_youtube_links_by_topic_and_length(self, topic: str, length: str):

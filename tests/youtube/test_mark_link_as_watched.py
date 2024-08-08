@@ -41,8 +41,8 @@ def test_mark_link_as_watched_success():
     assert "https://www.youtube.com/watch?v=fake8" not in user_data["watched"]["Python"]["length"]["short"]
 
 
-# ########################################################################################################################
-# # MISSING INPUTS
+########################################################################################################################
+# MISSING INPUTS
 def test_mark_link_as_watched_missing_user_id():
     request_data = {
         "topic": "Python",
@@ -91,7 +91,7 @@ def test_mark_link_as_watched_missing_video_url():
     assert response.status_code == 422
 
 
-# ########################################################################################################################
+########################################################################################################################
 # INVALID INPUTS
 def test_mark_link_as_watched_invalid_length():
     request_data = {
@@ -162,4 +162,14 @@ def test_mark_link_as_watched_already_watched():
     # check if video URL has been removed
     user_data = get_db_override().user_watched_links_collection.find_one({"user_id": request_data["user_id"]})
     assert "https://www.youtube.com/watch?v=fake19" not in user_data["watched"]["Python"]["length"]["short"]
+
+
 ########################################################################################################################
+# Cleanup function to remove fake URLs from the YouTube links collection
+def test_clear_youtube_links_collection():
+    db_service = get_db_override()
+    fake_urls = [f"https://www.youtube.com/watch?v=fake{i}" for i in range(1, 21)]
+    db_service.youtube_links_collection.update_one(
+        {"topic": "Python"},
+        {"$pull": {"length.short": {"$in": fake_urls}}}
+    )

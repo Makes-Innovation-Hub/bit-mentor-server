@@ -58,8 +58,10 @@ def mark_link_as_watched(request: MarkLinkAsWatchedRequest, db: YouTubeService =
     """
     # Validate inputs
     if request.length not in ["short", "medium", "long"]:
+        # Log the error
         raise HTTPException(status_code=400, detail="Video length must be one of 'short', 'medium', or 'long'")
     if request.topic not in CATEGORIES:
+        # Log the error
         raise HTTPException(status_code=400, detail="Invalid topic: topic should be in categories")
 
     #  initialize the user.
@@ -70,11 +72,14 @@ def mark_link_as_watched(request: MarkLinkAsWatchedRequest, db: YouTubeService =
 
     # Validate video url
     if request.video_url not in youtube_links:
+        # Log the error
         raise HTTPException(status_code=400, detail="Invalid video URL: URL does not exist in YouTube links")
     is_link_watched = db.link_exists_in_user_watched(request.user_id, request.topic, request.length, request.video_url)
     if is_link_watched:
+        # Log the error
         raise HTTPException(status_code=400, detail="This link has already been watched by the user.")
 
     # Update the user's watched links list.
     db.update_user_stats(user_id=request.user_id,topic=request.topic,length=request.length,video_url=request.video_url)
+    # Log the error
     return {"message": "User stats updated successfully"}
