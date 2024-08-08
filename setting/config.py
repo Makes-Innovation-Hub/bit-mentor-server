@@ -2,6 +2,8 @@ import argparse
 import os
 
 from dotenv import load_dotenv
+
+
 class Config:
     def __init__(self, env: str):
         self.env = env
@@ -12,7 +14,7 @@ class Config:
         self.MONGO_CLUSTER = ""
         self.DATABASE_NAME = ""
         self.MONGO_CONNECTION_STRING = ""
-
+        self.YOUTUBE_API = ""
         self.set_parameters()
 
     def load_environment(self):
@@ -36,6 +38,7 @@ class Config:
             self.OPENAI_KEY = os.getenv("OPENAI_KEY_PROD")
             self.DATABASE_NAME = os.getenv("DATABASE_NAME_PROD")
             self.MONGO_CONNECTION_STRING = os.getenv("MONGO_CONNECTION_STRING_PROD")
+            self.YOUTUBE_API = os.getenv("YOUTUBE_API_PROD")
 
         else:
             self.MONGO_USERNAME = os.getenv("MONGO_USERNAME_DEV")
@@ -44,7 +47,7 @@ class Config:
             self.OPENAI_KEY = os.getenv("OPENAI_KEY_DEV")
             self.DATABASE_NAME = os.getenv("DATABASE_NAME_DEV")
             self.MONGO_CONNECTION_STRING = os.getenv("MONGO_CONNECTION_STRING_DEV")
-
+            self.YOUTUBE_API = os.getenv("YOUTUBE_API_DEV")
 
         if self.MONGO_USERNAME is None or self.MONGO_PASSWORD is None or self.MONGO_CLUSTER is None \
                 or self.OPENAI_KEY is None or self.MONGO_CONNECTION_STRING is None:
