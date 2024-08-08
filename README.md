@@ -94,6 +94,7 @@ These files should be located in the root directory of your project
 - `MONGO_PASSWORD_DEV`: Password for MongoDB Atlas.
 - `MONGO_CLUSTER_DEV`: Cluster URL for MongoDB Atlas. 
 - `OPENAI_KEY_DEV`: API key for OpenAI services.
+- `MOTIVATION_API_DEV`: API key for motivational quotes API  
 * .env_prod For Prod
 
 - `SERVER_URL_PROD`: Url of server.
@@ -101,6 +102,7 @@ These files should be located in the root directory of your project
 - `MONGO_PASSWORD_PROD`: Password for MongoDB Atlas.
 - `MONGO_CLUSTER_PROD`: Cluster URL for MongoDB Atlas. 
 - `OPENAI_KEY_PROD`: API key for OpenAI services.
+- `MOTIVATION_API_PROD`: API key for motivational quotes API  
 
 ## How to Run      
  In the root directory, open terminal and run these commands:        

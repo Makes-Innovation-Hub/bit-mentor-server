@@ -11,6 +11,7 @@ class Config:
         self.MONGO_PASSWORD = ""
         self.MONGO_CLUSTER = ""
         self.DATABASE_NAME = ""
+        self.MOTIVATION_API = ""
         self.set_parameters()
 
     def load_environment(self):
@@ -33,12 +34,14 @@ class Config:
             self.MONGO_CLUSTER = os.getenv("MONGO_CLUSTER_PROD")
             self.OPENAI_KEY = os.getenv("OPENAI_KEY_PROD")
             self.DATABASE_NAME = os.getenv("DATABASE_NAME_PROD")
+            self.MOTIVATION_API = os.getenv("MOTIVATION_API_PROD")
         else:
             self.MONGO_USERNAME = os.getenv("MONGO_USERNAME_DEV")
             self.MONGO_PASSWORD = os.getenv("MONGO_PASSWORD_DEV")
             self.MONGO_CLUSTER = os.getenv("MONGO_CLUSTER_DEV")
             self.OPENAI_KEY = os.getenv("OPENAI_KEY_DEV")
             self.DATABASE_NAME = os.getenv("DATABASE_NAME_DEV")
+            self.MOTIVATION_API = os.getenv("MOTIVATION_API_DEV")
 
         if self.MONGO_USERNAME is None or self.MONGO_PASSWORD is None or self.MONGO_CLUSTER is None \
                 or self.OPENAI_KEY is None:
