@@ -1,7 +1,6 @@
 import pytest
 import mongomock
 
-# Import the functions to be tested
 import model.select_queries as select_queries
 import model.insert_queries as insert_queries
 
@@ -44,11 +43,9 @@ def test_add_user_to_quote(mock_db):
 def test_get_random_quotes(mock_db):
     quotes_collection = mock_db['quotes']
     
-    # Test with empty collection
     quotes = select_queries.get_random_quotes(quotes_collection)
     assert quotes == [], "Expected empty list when collection is empty"
     
-    # Insert fewer than 5 quotes
     quotes_collection.insert_many([
         {"quote": "Quote 1", "user_ids": []},
         {"quote": "Quote 2", "user_ids": []},
@@ -58,7 +55,6 @@ def test_get_random_quotes(mock_db):
     quotes = select_queries.get_random_quotes(quotes_collection)
     assert len(quotes) == 3, "Expected 3 quotes when collection has fewer than 5 quotes"
     
-    # Insert more quotes and test again
     quotes_collection.insert_many([
         {"quote": "Quote 4", "user_ids": []},
         {"quote": "Quote 5", "user_ids": []},
@@ -67,6 +63,3 @@ def test_get_random_quotes(mock_db):
     
     quotes = select_queries.get_random_quotes(quotes_collection)
     assert len(quotes) == 5, "Expected 5 quotes when collection has more than 5 quotes"
-
-if __name__ == "__main__":
-    pytest.main()
