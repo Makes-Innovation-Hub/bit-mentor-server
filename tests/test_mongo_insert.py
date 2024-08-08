@@ -1,6 +1,6 @@
 import unittest
 from pymongo.errors import ConnectionFailure
-from model.MongoDb import MongoDatabase 
+from model.MongoDb import MongoDatabase
 from setting.config import *
 
 class TestMongoDatabase(unittest.TestCase):
@@ -8,7 +8,7 @@ class TestMongoDatabase(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         # Connect to the test MongoDB instance
-        cls.test_uri = config.MONGO_CLUSTER 
+        cls.test_uri = config.MONGO_CLUSTER
         cls.test_db_name = config.DATABASE_NAME
         cls.mongo_database = MongoDatabase(cls.test_uri, cls.test_db_name)
 

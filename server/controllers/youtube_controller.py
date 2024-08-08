@@ -48,29 +48,33 @@ def get_youtube_links(topic: str, video_length: str) -> List[str]:
 
 
 @router.post("/mark_link_watched")
-def mark_link_as_watched(request: MarkLinkAsWatchedRequest, db: YouTubeService = Depends(get_db)):
+def mark_link_as_watched(request: MarkLinkAsWatchedRequest, db: YouTubeService = Depends(get_db)) -> dict:
+    """
+    Mark a YouTube link as watched for a specific user.
+
+    :param request: The request body containing the user ID, topic, length, and video URL.
+    :param db: The YouTubeService instance used to interact with MongoDB
+    :return: dict: A success message indicating that the user's stats were updated successfully.
+    """
     # Validate inputs
     if request.length not in ["short", "medium", "long"]:
         raise HTTPException(status_code=400, detail="Video length must be one of 'short', 'medium', or 'long'")
     if request.topic not in CATEGORIES:
         raise HTTPException(status_code=400, detail="Invalid topic: topic should be in categories")
 
+    #  initialize the user.
     db.initialize_user(request.user_id)
 
-    # check if url exist in youtube links
+    # check if url exist in youtube_links_collection
     youtube_links = db.find_youtube_links_by_topic_and_length(request.topic, request.length)
 
+    # Validate video url
     if request.video_url not in youtube_links:
         raise HTTPException(status_code=400, detail="Invalid video URL: URL does not exist in YouTube links")
-
     is_link_watched = db.link_exists_in_user_watched(request.user_id, request.topic, request.length, request.video_url)
     if is_link_watched:
         raise HTTPException(status_code=400, detail="This link has already been watched by the user.")
 
-    db.update_user_stats(
-        user_id=request.user_id,
-        topic=request.topic,
-        length=request.length,
-        video_url=request.video_url
-    )
+    # Update the user's watched links list.
+    db.update_user_stats(user_id=request.user_id,topic=request.topic,length=request.length,video_url=request.video_url)
     return {"message": "User stats updated successfully"}
