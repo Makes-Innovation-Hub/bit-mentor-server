@@ -13,6 +13,7 @@ class MongoDatabase:
         self.questions_collection = self.db["Questions"]
         self.users_answers_collection = self.db["Users"]
         self.stats_collection = self.db["stats"]
+        self.quotes_collection = self.db["quotes"]
 
     def insert_question(self,collection_name,question_data):
         if not self.client:
