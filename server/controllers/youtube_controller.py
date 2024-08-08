@@ -5,6 +5,7 @@ from googleapiclient.errors import HttpError
 
 from data_types.youtube_models import MarkLinkAsWatchedRequest
 from model.YouTube_DB import YouTubeService, get_db
+from server.utils.logger import app_logger
 from server.utils.youtube import connect_to_youtube_api, fetch_youtube_links
 from constants import CATEGORIES
 
@@ -56,30 +57,34 @@ def mark_link_as_watched(request: MarkLinkAsWatchedRequest, db: YouTubeService =
     :param db: The YouTubeService instance used to interact with MongoDB
     :return: dict: A success message indicating that the user's stats were updated successfully.
     """
+    app_logger.info(f"Received request to mark link as watched: {request.dict()}")
+
     # Validate inputs
     if request.length not in ["short", "medium", "long"]:
-        # Log the error
+        app_logger.error(f"Invalid length: {request.length}")
         raise HTTPException(status_code=400, detail="Video length must be one of 'short', 'medium', or 'long'")
     if request.topic not in CATEGORIES:
-        # Log the error
+        app_logger.error(f"Invalid topic: {request.topic}")
         raise HTTPException(status_code=400, detail="Invalid topic: topic should be in categories")
 
     #  initialize the user.
     db.initialize_user(request.user_id)
+    app_logger.info(f"Initialized user: {request.user_id}")
 
     # check if url exist in youtube_links_collection
     youtube_links = db.find_youtube_links_by_topic_and_length(request.topic, request.length)
 
     # Validate video url
     if request.video_url not in youtube_links:
-        # Log the error
+        app_logger.error(f"Invalid video URL: {request.video_url} URL does not exist in YouTube links")
         raise HTTPException(status_code=400, detail="Invalid video URL: URL does not exist in YouTube links")
+
     is_link_watched = db.link_exists_in_user_watched(request.user_id, request.topic, request.length, request.video_url)
     if is_link_watched:
-        # Log the error
+        app_logger.error(f"Link already watched by user: {request.video_url}")
         raise HTTPException(status_code=400, detail="This link has already been watched by the user.")
 
     # Update the user's watched links list.
     db.update_user_stats(user_id=request.user_id,topic=request.topic,length=request.length,video_url=request.video_url)
-    # Log the error
+    app_logger.info(f"User stats updated successfully for user: {request.user_id}, video: {request.video_url}")
     return {"message": "User stats updated successfully"}

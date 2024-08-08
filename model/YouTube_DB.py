@@ -2,6 +2,7 @@ from pymongo import MongoClient
 
 from constants import CATEGORIES
 from setting.config import config
+from server.utils.logger import app_logger
 
 
 def get_db():
@@ -21,7 +22,7 @@ class YouTubeService:
         self.user_watched_links_collection = self.db["user_watched_links"]
         self.initialize_collections()
         # self.initialize_user("test_user1")
-        # self.add_fake_urls_to_python()
+        self.add_fake_urls_to_python()
 
     def initialize_collections(self):
         """
@@ -38,6 +39,7 @@ class YouTubeService:
                         "long": []
                     }
                 })
+            app_logger.info(f"Collection for topic '{category}' initialized.")
 
     def initialize_user(self, user_id: str):
         """
@@ -57,9 +59,10 @@ class YouTubeService:
                 }
             }
             self.user_watched_links_collection.insert_one(user_data)
+            app_logger.info(f"User data initialized for user_id '{user_id}'.")
             return user_data
 
-    def add_fake_urls_to_python(self): # avoid duplicate
+    def add_fake_urls_to_python(self):  # avoid duplicate
         fake_urls = [f"https://www.youtube.com/watch?v=fake{i}" for i in range(1, 21)]
         for url in fake_urls:
             self.youtube_links_collection.update_one(
@@ -77,6 +80,7 @@ class YouTubeService:
         urls = []
         for url in document["length"][length]:
             urls.append(url)
+        app_logger.info(f"Retrieved {len(urls)} URLs for topic '{topic}' and length '{length}'.")
         return urls
 
     def link_exists_in_user_watched(self, user_id: str, topic: str, length: str, video_url: str) -> bool:
@@ -86,7 +90,9 @@ class YouTubeService:
         """
         user_data = self.user_watched_links_collection.find_one({"user_id": user_id})
         if user_data and video_url in user_data["watched"][topic]["length"][length]:
+            app_logger.info(f"Video URL '{video_url}' has already been watched by user_id '{user_id}'.")
             return True
+        app_logger.info(f"Video URL '{video_url}' has not been watched by user_id '{user_id}'.")
         return False
 
     def update_user_stats(self, user_id: str, topic: str, length: str, video_url: str) -> bool:
@@ -97,7 +103,12 @@ class YouTubeService:
             {"user_id": user_id},
             {"$push": {f"watched.{topic}.length.{length}": video_url}}
         )
-        return update_result.modified_count > 0
+        if update_result.modified_count > 0:
+            app_logger.info(f"User stats updated for user_id '{user_id}', topic '{topic}', length '{length}', with video URL '{video_url}'.")
+            return True
+        else:
+            app_logger.error(f"Failed to update user stats for user_id '{user_id}', topic '{topic}', length '{length}', with video URL '{video_url}'.")
+            return False
 
 
 def check_mongo_connection():
