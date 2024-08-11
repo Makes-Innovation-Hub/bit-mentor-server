@@ -3,7 +3,7 @@ from typing import List
 from fastapi import HTTPException, APIRouter, Depends
 from googleapiclient.errors import HttpError
 
-from data_types.youtube_models import MarkLinkAsWatchedRequest
+from data_types.youtube_models import MarkLinkAsWatchedRequest, YouTubeLinkRequest
 from model.YouTube_DB import YouTubeService, get_db
 from server.utils.logger import app_logger
 from server.utils.youtube import connect_to_youtube_api, fetch_youtube_links
@@ -47,6 +47,17 @@ router = APIRouter()
 #     except Exception as e:
 #         raise HTTPException(status_code=400, detail=f"An error occurred while fetching YouTube links: {str(e)}")
 #
+@router.post("/",)
+def get_youtube_links(request:YouTubeLinkRequest, db: YouTubeService = Depends(get_db)) :
+    try:
+        db.add_youtube_link(
+            topic=request.topic,
+            length=request.length,
+            url=request.url
+        )
+        return {"message": "YouTube link added successfully."}
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
 
 @router.post("/mark_link_watched")
 def mark_link_as_watched(request: MarkLinkAsWatchedRequest, db: YouTubeService = Depends(get_db)) -> dict:

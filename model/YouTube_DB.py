@@ -110,7 +110,28 @@ class YouTubeService:
             app_logger.error(f"Failed to update user stats for user_id '{user_id}', topic '{topic}', length '{length}', with video URL '{video_url}'.")
             return False
 
+    def add_youtube_link(self, topic, length, url):
+        """
+        Adds a YouTube URL to the specified topic and length in the MongoDB collection.
 
+        :param topic: The topic/category under which the URL should be stored.
+        :param length: The length category (e.g., 'short', 'medium', 'long').
+        :param url: The YouTube URL to be added.
+        """
+        update_result = self.youtube_links_collection.update_one(
+            {"topic": topic},
+            {"$addToSet": {f"length.{length}": url}},
+            upsert=True
+        )
+        if update_result.modified_count:
+            app_logger.info(f"URL added to existing document under topic '{topic}' and length '{length}'.")
+            return True
+        else:
+            app_logger.info(
+                f"URL '{url}' was already present under topic '{topic}' and length '{length}' and was not added again.")
+            return False
+
+# Example usage
 def check_mongo_connection():
     if not config.MONGO_CONNECTION_STRING:
         raise KeyError("MongoDB connection string is not set/loaded correctly.")

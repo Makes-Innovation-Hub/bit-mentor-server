@@ -6,3 +6,9 @@ class MarkLinkAsWatchedRequest(BaseModel):
     topic: str
     length: str
     video_url: str
+
+
+class YouTubeLinkRequest(BaseModel):
+    topic: str
+    length: str
+    url: str
