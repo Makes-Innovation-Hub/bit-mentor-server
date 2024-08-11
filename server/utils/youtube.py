@@ -4,6 +4,7 @@ from fastapi import HTTPException
 from googleapiclient.discovery import build, Resource
 from googleapiclient.errors import HttpError
 
+from server.utils.logger import app_logger
 from setting.config import config
 
 
@@ -43,3 +44,19 @@ def fetch_youtube_links(youtube: Resource, topic: str, video_length: str) -> Lis
         raise HTTPException(status_code=400, detail=f"An HTTP error occurred while fetching YouTube links: {e}")
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"An error occurred while fetching YouTube links: {e}")
+
+
+def find_available_links(youtube_links, user_links):
+    """
+    Finds available YouTube links that have not been watched by the user.
+    Returns a list of available links.
+    """
+    # Convert lists to sets
+    youtube_links_set = set(youtube_links or [])
+    user_links_set = set(user_links or [])
+
+    # Find the difference
+    available_links_set = list(youtube_links_set - user_links_set)
+
+    app_logger.info(f"Found {len(available_links_set)} available links not watched by user.")
+    return available_links_set
