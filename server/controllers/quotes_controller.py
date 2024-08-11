@@ -1,3 +1,4 @@
+import random
 from fastapi import APIRouter, HTTPException
 import requests
 import model.select_queries as select_queries
@@ -31,12 +32,27 @@ def get_quote(user_id: int):
         if user_id not in quote['user_ids']:
             insert_queries.add_user_to_quote(quotes_collection, quote['_id'], user_id)
             return quote['quote']
+    motivational_categories = {
+    "amazing",
+    "courage",
+    "dreams",
+    "happiness",
+    "hope",
+    "inspirational",
+    "intelligence",
+    "learning",
+    "life",
+    "love",
+    "success"
+}
 
-    api_url = 'https://api.api-ninjas.com/v1/quotes'
+    random_category = random.choice(list(motivational_categories))
+
+    api_url = 'https://api.api-ninjas.com/v1/quotes?category=' + random_category
     response = requests.get(api_url, headers={'X-Api-Key': config.MOTIVATION_API})
     
     if response.status_code == requests.codes.ok:
-        new_quote = response.json()[0]["quote"]
+        new_quote = response.json()[0]
         insert_queries.insert_quote(quotes_collection, new_quote)
         quote_doc = quotes_collection.find_one({'quote': new_quote})
         if quote_doc:
