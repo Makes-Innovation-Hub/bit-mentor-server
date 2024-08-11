@@ -199,15 +199,14 @@ Each document in the collection represents a single topic, identified by a uniqu
 Example of the collection structure:
 ```json
 [
- {
-   _id : 123
-   name :"python"
- },
-
- {
-   _id : 456
-   name :"algorithms"
- }
+  {
+    "_id": 123,
+    "name": "python"
+  },
+  {
+    "_id": 456,
+    "name": "algorithms"
+  }
 ]
 
 ```
