@@ -32,11 +32,7 @@ class MongoDatabase:
             # Insert missing topics
             if missing_topics:
                 self.topics.insert_many([{"name": topic} for topic in missing_topics])
-                app_logger.info(f"Inserted missing topics: {missing_topics}")
-            else:
-                app_logger.info("All topics are already present.")
         except Exception as e:
-            app_logger.error(f"Error initializing topics: {e}")
             raise RuntimeError("Failed to initialize topics") from e
 
 
