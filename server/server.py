@@ -2,7 +2,7 @@ from fastapi import FastAPI, Request, Response
 
 from model.YouTube_DB import get_db
 from server.utils.logger import app_logger, RequestIdFilter, generate_request_id
-from server.controllers import mongo_controller, openai_controller, question_controller,youtube_controller
+from server.controllers import mongo_controller, openai_controller, question_controller,youtube_controller,quotes_controller
 from setting.config import config
 
 app = FastAPI()
