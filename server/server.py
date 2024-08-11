@@ -1,13 +1,14 @@
 from fastapi import FastAPI, Request, Response
 from server.utils.logger import app_logger, RequestIdFilter, generate_request_id
-from server.controllers import mongo_controller, openai_controller, question_controller
-
+from server.controllers import mongo_controller, openai_controller, question_controller,youtube_controller
+from setting.config import config
 
 
 
 app = FastAPI()
 app.include_router(mongo_controller.router)
 app.include_router(question_controller.router, prefix="/questions", tags=["questions"])
+app.include_router(youtube_controller.router, prefix="/youtube", tags=["youtube"])
 app.include_router(openai_controller.router)
 
 @app.middleware("http")
