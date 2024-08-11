@@ -3,7 +3,7 @@ from model.MongoDb import MongoDatabase
 from server.utils.logger import app_logger
 from model.MongoDb import MongoDatabase 
 from setting.config import *
-from pymongo.errors import ConnectionFailure
+from pymongo.errors import ConnectionFailure, PyMongoError
 from model.MongoDb import check_mongo_connection
 
 
@@ -14,7 +14,6 @@ router = APIRouter()
 mongo_uri = config.MONGO_CLUSTER
 database_name = config.DATABASE_NAME
 mongo_db = MongoDatabase(mongo_uri, database_name)
-
 
 @router.get("/check-mongo-connection")
 def check_mongo(response: Response):
