@@ -5,7 +5,7 @@ from setting.config import *
 
 router = APIRouter()
 
-@router.get("/quote/{user_id}")
+@router.get("/{user_id}")
 def get_quote(user_id: int):
     """
     Retrieves a random quote from the API.
