@@ -1,31 +1,12 @@
 from fastapi import FastAPI, Request, Response
 from contextlib import asynccontextmanager
 from server.utils.logger import app_logger, RequestIdFilter, generate_request_id
-from server.controllers import mongo_controller, openai_controller, question_controller
-
-# Define a lifespan context manager
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    try:
-        # Startup logic: Initialize topics in MongoDB
-        mongo_controller.initialize_topics()
-        app_logger.info("Topics initialized successfully.")
-        yield  # Allow the application to serve requests
-    except RuntimeError as e:
-        app_logger.error(f"Startup error: {e}")
-        raise
-    finally:
-        # Shutdown logic: Cleanup tasks (if any)
-        try:
-            mongo_controller.mongo_db.client.close()
-            app_logger.info("MongoDB connection closed successfully.")
-        except Exception as e:
-            app_logger.error(f"Error closing MongoDB connection: {e}")
-
-# Create FastAPI app with lifespan manager
-app = FastAPI(lifespan=lifespan)
+from server.controllers import mongo_controller, openai_controller, question_controller,youtube_controller
+from setting.config import config
+app = FastAPI()
 app.include_router(mongo_controller.router)
 app.include_router(question_controller.router, prefix="/questions", tags=["questions"])
+app.include_router(youtube_controller.router, prefix="/youtube", tags=["youtube"])
 app.include_router(openai_controller.router)
 
 @app.middleware("http")
