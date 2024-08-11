@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Response, status
+from fastapi import APIRouter, Response, status,HTTPException
 from model.MongoDb import MongoDatabase
 from server.utils.logger import app_logger
 from model.MongoDb import MongoDatabase 
@@ -29,6 +29,26 @@ def initialize_topics():
         app_logger.error(f"Unexpected error during topic initialization: {e}")
         raise RuntimeError("Failed to initialize topics due to an unexpected error") from e
 
+@router.get("/topics", response_model=list[str], tags=["topics"])
+async def get_topics():
+    """
+    Retrieve the list of available topics for questions.
+    
+    Returns:
+        list[str]: A list of topic names.
+    
+    Raises:
+        HTTPException: If there is an error retrieving the topics.
+    """
+    try:
+        topics = mongo_db.load_topics_from_mongo()
+        return topics
+    except RuntimeError as e:
+        app_logger.error(f"Failed to retrieve topics: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Error retrieving topics"
+        )
 
 @router.get("/check-mongo-connection")
 def check_mongo(response: Response):
@@ -50,8 +70,6 @@ def check_mongo(response: Response):
         app_logger.error(f"Error connecting to MongoDB: {str(e)}")
         return {"error": str(e)}
 
-
-    
 @router.post("/insert-question")
 def insert_question(question_data: dict, response: Response):
     try:
