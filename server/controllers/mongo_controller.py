@@ -15,20 +15,6 @@ mongo_uri = config.MONGO_CLUSTER
 database_name = config.DATABASE_NAME
 mongo_db = MongoDatabase(mongo_uri, database_name)
 
-
-def initialize_topics():
-    try:
-        mongo_db.init_topics()
-        app_logger.info("Topics initialized successfully.")
-    except PyMongoError as e:
-        # Handle specific PyMongo errors
-        app_logger.error(f"MongoDB error during topic initialization: {e}")
-        raise RuntimeError("Failed to initialize topics due to MongoDB error") from e
-    except Exception as e:
-        # Handle any other unexpected errors
-        app_logger.error(f"Unexpected error during topic initialization: {e}")
-        raise RuntimeError("Failed to initialize topics due to an unexpected error") from e
-
 @router.get("/topics", response_model=list[str], tags=["topics"])
 async def get_topics():
     """
