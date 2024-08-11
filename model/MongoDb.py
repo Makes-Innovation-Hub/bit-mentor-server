@@ -18,7 +18,8 @@ class MongoDatabase:
         self.users_answers_collection = self.db["Users"]
         self.stats_collection = self.db["stats"]
         self.topics = self.db["allowed_topics"]
-
+        self.init_topics()
+        
     def init_topics(self):
         try:
             # Fetch existing topics
