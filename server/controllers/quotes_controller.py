@@ -36,7 +36,7 @@ def get_quote(user_id: int):
     response = requests.get(api_url, headers={'X-Api-Key': config.MOTIVATION_API})
     
     if response.status_code == requests.codes.ok:
-        new_quote = response.json()[0]
+        new_quote = response.json()[0]["quote"]
         insert_queries.insert_quote(quotes_collection, new_quote)
         quote_doc = quotes_collection.find_one({'quote': new_quote})
         if quote_doc:
