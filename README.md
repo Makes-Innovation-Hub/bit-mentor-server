@@ -106,6 +106,8 @@ These files should be located in the root directory of your project
 - `OPENAI_KEY_PROD`: API key for OpenAI services.
 - `MOTIVATION_API_PROD`: API key for motivational quotes API  
 - `YOUTUBE_API_PROD`: API ket for youtube services.
+- `YOUTUBE_API_PROD`: API ket for youtube services.  
+
 ## How to Run      
  In the root directory, open terminal and run these commands:        
 1.Install the required packages:    

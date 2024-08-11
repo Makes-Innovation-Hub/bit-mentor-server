@@ -10,7 +10,7 @@ app.include_router(mongo_controller.router)
 app.include_router(question_controller.router, prefix="/questions", tags=["questions"])
 app.include_router(youtube_controller.router, prefix="/youtube", tags=["youtube"])
 app.include_router(openai_controller.router)
-app.include_router(quotes_controller.router)
+app.include_router(quotes_controller.router, prefix="/quote", tags=["quote"])
 
 @app.middleware("http")
 async def log_req(request: Request, call_next):
