@@ -4,6 +4,10 @@ from server.utils.logger import app_logger
 from model.insert_queries import *
 import urllib.parse as UP
 from setting.config import *
+
+
+ALLOWED_TOPICS = ["python", "algorithms", "dbs", "system design", "sql"]
+
 class MongoDatabase:
     def __init__(self, uri, database_name):
         self.uri = uri
@@ -13,6 +17,29 @@ class MongoDatabase:
         self.questions_collection = self.db["Questions"]
         self.users_answers_collection = self.db["Users"]
         self.stats_collection = self.db["stats"]
+        self.topics = self.db["allowed_topics"]
+
+    def init_topics(self):
+        try:
+            # Fetch existing topics
+            existing_topics = self.topics.find({}, {"_id": 0, "name": 1})
+            existing_topic_names = {topic["name"] for topic in existing_topics}
+
+            # Determine missing topics
+            missing_topics = [topic for topic in ALLOWED_TOPICS if topic not in existing_topic_names]
+
+            # Insert missing topics
+            if missing_topics:
+                self.topics.insert_many([{"name": topic} for topic in missing_topics])
+                app_logger.info(f"Inserted missing topics: {missing_topics}")
+            else:
+                app_logger.info("All topics are already present.")
+        except Exception as e:
+            app_logger.error(f"Error initializing topics: {e}")
+            raise RuntimeError("Failed to initialize topics") from e
+
+
+    
 
     def insert_question(self,collection_name,question_data):
         if not self.client:
