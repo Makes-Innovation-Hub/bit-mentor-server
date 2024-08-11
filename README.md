@@ -138,7 +138,7 @@ This collection stores individual questions with relevant details:
 -   **Correct Answer Index**: The index of the correct answer in the options array.
 -   **Explanation**: An explanation of the correct answer.
 -   **Users Answered**: A list of users who have answered the question, with an indicator of whether their answer was correct.
-```python
+```json
 [
     {
         "topic": "python",
@@ -155,7 +155,7 @@ This collection stores individual questions with relevant details:
 ]
 
 ```
-**2. Users Collection**
+**2. Stats Collection**
 
 This collection stores data about individual users and their performance:
 
@@ -164,7 +164,7 @@ This collection stores data about individual users and their performance:
     -   **Difficulty**: Metrics for each difficulty level.
         -   **Questions Attempted**: Number of questions attempted.
         -   **Questions Correct**: Number of questions answered correctly.
-```python
+```json
 [
     {
         "tele_id": 123,
@@ -191,36 +191,23 @@ This collection stores data about individual users and their performance:
 
 ```
 
-**3. Topic Collections**
+**3. Allowed topics Collection**
 
-This collection tracks statistics for each topic
+This collection contains the topics for which users can retrieve questions. 
+Each document in the collection represents a single topic, identified by a unique ID and name.
 
--   **Topic**: The subject of the questions (e.g., Python).
--   **Difficulty**: metrics for each difficulty level.
-    -   **Questions Attempted**: Total number of questions attempted.
-    -   **Questions Correct**: Total number of questions answered correctly.
-
-```python
+Example of the collection structure:
+```json
 [
-    {
-        "topic": "python",
-        "difficulty": {
-            "easy": {
-                "questions_attempted": 50,
-                "questions_correct": 40
-            },
-            "medium": {
-                "questions_attempted": 30,
-                "questions_correct": 20
-            },
-            "hard": {
-                "questions_attempted": 20,
-                "questions_correct": 10
-            }
-        },
-        "questions_attempted": 100,
-        "questions_correct": 70
-    }
+ {
+   _id : 123
+   name :"python"
+ },
+
+ {
+   _id : 456
+   name :"algorithms"
+ }
 ]
 
 ```
