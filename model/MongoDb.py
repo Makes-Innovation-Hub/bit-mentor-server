@@ -1,5 +1,5 @@
 from pymongo import MongoClient
-from pymongo.errors import ConnectionFailure
+from pymongo.errors import ConnectionFailure, PyMongoError
 from server.utils.logger import app_logger
 from model.insert_queries import *
 import urllib.parse as UP
@@ -35,9 +35,6 @@ class MongoDatabase:
         except Exception as e:
             raise RuntimeError("Failed to initialize topics") from e
 
-
-    
-
     def insert_question(self,collection_name,question_data):
         if not self.client:
             self.check_mongo_connection(self.uri,self.database_name)
@@ -64,7 +61,7 @@ class MongoDatabase:
         except Exception as e:
             print(f"An error occurred while inserting data: {e}")
             raise Exception(f"An error occurred while inserting data: {e}")
-        
+
     def check_mongo_connection(self):
         try:
             self.client.admin.command('ismaster')
@@ -75,11 +72,25 @@ class MongoDatabase:
         except Exception as e:
             app_logger.error(f"An error occurred: {e}")
 
+    def load_topics_from_mongo(self):
+        """
+        Load the list of allowed topics from MongoDB.
 
+        Returns:
+            List[dict]: A list of topics.
 
-
-
-         
+        Raises:
+            RuntimeError: If there is an error loading the topics.
+        """
+        try:
+            topics_cursor = self.topics.find({}, {"_id": 0, "name": 1})
+            topics = [topic["name"] for topic in topics_cursor]
+            app_logger.info(f"Loaded topics: {topics}")
+            return topics
+        except PyMongoError as e:
+            app_logger.error(f"Error loading topics from MongoDB: {e}")
+            raise RuntimeError("Failed to load topics from MongoDB") from e
+   
 def check_mongo_connection():
     username = UP.quote_plus(config.MONGO_USERNAME)
     password = UP.quote_plus(config.MONGO_PASSWORD)
