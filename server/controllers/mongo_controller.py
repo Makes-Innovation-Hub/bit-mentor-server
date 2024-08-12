@@ -8,12 +8,12 @@ from model.MongoDb import check_mongo_connection
 
 
 
-
 router = APIRouter()
 
 mongo_uri = config.MONGO_CLUSTER
 database_name = config.DATABASE_NAME
 mongo_db = MongoDatabase(mongo_uri, database_name)
+
 
 @router.get("/topics", response_model=list[str], tags=["topics"])
 async def get_topics():
@@ -35,6 +35,7 @@ async def get_topics():
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Error retrieving topics"
         )
+
 
 @router.get("/check-mongo-connection")
 def check_mongo(response: Response):
