@@ -45,20 +45,26 @@ def get_quote(user_id: int):
     "love",
     "success"
 }
-
-    random_category = random.choice(list(motivational_categories))
-
-    api_url = 'https://api.api-ninjas.com/v1/quotes?category=' + random_category
-    response = requests.get(api_url, headers={'X-Api-Key': config.MOTIVATION_API})
+    new_quote = None
     
-    if response.status_code == requests.codes.ok:
-        new_quote = response.json()[0]
+    for _ in range(5):
+        random_category = random.choice(list(motivational_categories))
+        api_url = 'https://api.api-ninjas.com/v1/quotes?category=' + random_category
+        response = requests.get(api_url, headers={'X-Api-Key': config.MOTIVATION_API})
+        if response.status_code != requests.codes.ok:
+            app_logger.warning("Failed to retrieve a new quote from the API")
+            raise HTTPException(status_code=400, detail="Error")
+        quote_doc = quotes_collection.find_one({'quote': response.json()[0]})
+        if not quote_doc:
+            new_quote = response.json()[0]
+            break
+    
+    if new_quote:
         insert_queries.insert_quote(quotes_collection, new_quote)
         quote_doc = quotes_collection.find_one({'quote': new_quote})
         if quote_doc:
             insert_queries.add_user_to_quote(quotes_collection, quote_doc['_id'], user_id)
             return new_quote
-
     else:
-        app_logger.warning("Failed to retrieve a new quote from the API")
+        app_logger.warning("Failed to retrieve a new quote from the API that user has not seen before")
         raise HTTPException(status_code=400, detail="Error")
