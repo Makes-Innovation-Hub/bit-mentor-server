@@ -10,6 +10,18 @@ router = APIRouter()
 
 @router.post("/", response_model=QuestionResponse)
 async def generate_question(question: QuestionRequest):
+    """
+    Generates a question based on the provided QuestionRequest.
+
+    Args:
+        question (QuestionRequest): The request containing the question parameters.
+
+    Returns:
+        QuestionResponse: The generated question response.
+
+    Raises:
+        HTTPException: If a KeyError or any other exception occurs during question generation.
+    """
     try:
         with_answers = True if question.answers_count and question.answers_count > 0 else False
         if with_answers:

@@ -6,11 +6,24 @@ import model.insert_queries as insert_queries
 
 @pytest.fixture
 def mock_db():
+    """
+    A fixture that creates a mock MongoDB client and yields a mock database object.
+
+    Yields:
+        mongomock.MongoClient: A mock MongoDB client object.
+    """
     client = mongomock.MongoClient()
     db = client['test_database']
     yield db
 
 def test_insert_data(mock_db):
+    """
+    Tests the functionality of the insert_data function by inserting a document into a mock MongoDB collection.
+
+    Parameters:
+    mock_db (MongoClient): A mock MongoDB client object.
+
+    """
     collection = mock_db['test_collection']
     data = {"key": "value"}
     
@@ -20,6 +33,13 @@ def test_insert_data(mock_db):
     assert collection.find_one({"_id": inserted_id}) is not None, "Inserted document not found"
 
 def test_insert_quote(mock_db):
+    """
+    Tests the functionality of the insert_quote function by inserting a quote into a mock MongoDB collection.
+
+    Parameters:
+    mock_db (MongoClient): A mock MongoDB client object.
+
+    """
     quotes_collection = mock_db['quotes']
     quote = "This is a test quote."
     
@@ -30,6 +50,13 @@ def test_insert_quote(mock_db):
     assert found_quote["quote"] == quote, "Inserted quote does not match"
 
 def test_add_user_to_quote(mock_db):
+    """
+    Tests the functionality of the add_user_to_quote function by adding a user to a quote in a mock MongoDB collection.
+
+    Parameters:
+    mock_db (MongoClient): A mock MongoDB client object.
+
+    """
     quotes_collection = mock_db['quotes']
     quote = {"quote": "This is a test quote.", "user_ids": []}
     quote_id = quotes_collection.insert_one(quote).inserted_id
@@ -41,6 +68,13 @@ def test_add_user_to_quote(mock_db):
     assert user_id in updated_quote["user_ids"], "User ID not added to quote"
 
 def test_get_random_quotes(mock_db):
+    """
+    Tests the functionality of the get_random_quotes function by retrieving random quotes from a mock MongoDB collection.
+
+    Parameters:
+    mock_db (MongoClient): A mock MongoDB client object.
+
+    """
     quotes_collection = mock_db['quotes']
     
     quotes = select_queries.get_random_quotes(quotes_collection)

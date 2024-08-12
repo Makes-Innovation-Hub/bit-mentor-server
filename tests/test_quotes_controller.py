@@ -5,6 +5,12 @@ from model.MongoDb import MongoDatabase
 
 client = TestClient(app)
 def test_get_quote_success():
+    """
+    Tests the successful retrieval of a quote from the API.
+    
+    This function sends a GET request to the '/quote/1' endpoint and asserts that the response status code is 200.
+    
+    """
     response = client.get("/quote/1")
     assert response.status_code == 200
     response_json = response.json()
