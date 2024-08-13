@@ -39,7 +39,6 @@ class YouTubeService:
                         "long": []
                     }
                 })
-            app_logger.info(f"Collection for topic '{category}' initialized.")
 
     def initialize_user(self, user_id: str):
         """
@@ -59,7 +58,6 @@ class YouTubeService:
                 }
             }
             self.user_watched_links_collection.insert_one(user_data)
-            app_logger.info(f"User data initialized for user_id '{user_id}'.")
             return user_data
 
     def add_fake_urls_to_python(self):  # avoid duplicate
