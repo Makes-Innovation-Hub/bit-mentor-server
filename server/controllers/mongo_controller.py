@@ -72,12 +72,16 @@ def submit_answer(answer_data: dict, response: Response):
     user_id = answer_data['user_id']
     topic = answer_data['topic']
     difficulty = answer_data['difficulty']
-    is_correct = answer_data['is_correct']
+    score = answer_data['score']
+    is_correct = False
+    if score > 0:
+        is_correct = True
 
     # Increment the appropriate counters
     update_fields = {
         f'stats.topic.{topic}.{difficulty}.questions_answered': 1,
-        f'stats.topic.{topic}.{difficulty}.correct_answers': 1 if is_correct else 0
+        f'stats.topic.{topic}.{difficulty}.correct_answers': 1 if is_correct else 0,
+        f'stats.topic.{topic}.{difficulty}.total_score': score
     }
 
     # Update statistics by topic and difficulty
