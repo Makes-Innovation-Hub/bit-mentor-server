@@ -64,6 +64,51 @@ def get_youtube_links(request: YouTubeLinkRequest, db: YouTubeService = Depends(
             app_logger.error(f"Error occurred while fetching video links: {str(e)}")
             raise HTTPException(status_code=500, detail="Error occurred while fetching video links")
 
+@router.post("/")
+def get_youtube_links(request: YouTubeLinkRequest, db: YouTubeService = Depends(get_db)):
+    video_links = [
+        "https://www.youtube.com/watch?v=fake1041",
+        "https://www.youtube.com/watch?v=fake447",
+        "https://www.youtube.com/watch?v=fake443",
+        "https://www.youtube.com/watch?v=fake444",
+        "https://www.youtube.com/watch?v=fake445"
+    ]
+    return video_links
+# @router.get("/", response_model=List[str])
+# def get_youtube_links(topic: str, video_length: str) -> List[str]:
+#     """
+#     Fetch YouTube video links based on a given topic and video length.
+#
+#     Args:
+#         topic (str): The topic to fetch video links for. Must be a non-empty string.
+#         video_length (str): The length category of the videos to fetch. Must be one of 'short', 'medium', or 'long'.
+#
+#     Returns:
+#         List[str]: A list of URLs as strings.
+#     """
+#
+#     # Validate topic
+#     if not topic:
+#         raise HTTPException(status_code=400, detail="Topic cannot be an empty string")
+#
+#     # Validate video_length
+#     if video_length not in ["short", "medium", "long"]:
+#         raise HTTPException(status_code=400, detail="Video length must be one of 'short', 'medium', or 'long'")
+#
+#     # Connect to the YouTube API
+#     youtube = connect_to_youtube_api()
+#     if not youtube:
+#         raise HTTPException(status_code=500, detail="Failed to connect to YouTube API")
+#
+#     try:
+#         video_links = fetch_youtube_links(youtube, topic, video_length)
+#         # returning a list of URLs as strings
+#         return video_links
+#     except HttpError as e:
+#         raise HTTPException(status_code=400, detail=f"An HTTP error occurred while fetching YouTube links: {str(e)}")
+#     except Exception as e:
+#         raise HTTPException(status_code=400, detail=f"An error occurred while fetching YouTube links: {str(e)}")
+#
 
 @router.post("/mark_link_watched")
 def mark_link_as_watched(request: MarkLinkAsWatchedRequest, db: YouTubeService = Depends(get_db)) -> dict:
