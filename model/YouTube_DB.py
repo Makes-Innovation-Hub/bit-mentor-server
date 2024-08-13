@@ -13,7 +13,7 @@ def get_db():
     return youtube_mongo
 
 
-class YouTubeService:
+class YouTubeMongoService:
 
     def __init__(self):
         self.client = check_mongo_connection()
@@ -167,4 +167,4 @@ def check_mongo_connection():
         return {"error": str(e)}
 
 
-youtube_mongo = YouTubeService()
+youtube_mongo = YouTubeMongoService()
