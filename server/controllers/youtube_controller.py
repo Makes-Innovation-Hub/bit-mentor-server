@@ -3,7 +3,7 @@ from typing import List
 from fastapi import HTTPException, APIRouter, Depends
 from googleapiclient.errors import HttpError
 
-from data_types.youtube_models import MarkLinkAsWatchedRequest
+from data_types.youtube_models import MarkLinkAsWatchedRequest, YouTubeLinkRequest
 from model.YouTube_DB import YouTubeService, get_db
 from server.utils.logger import app_logger
 from server.utils.youtube import connect_to_youtube_api, fetch_youtube_links
@@ -11,7 +11,16 @@ from constants import CATEGORIES
 
 router = APIRouter()
 
-
+@router.post("/")
+def get_youtube_links(request: YouTubeLinkRequest, db: YouTubeService = Depends(get_db)):
+    video_links = [
+        "https://www.youtube.com/watch?v=fake1041",
+        "https://www.youtube.com/watch?v=fake447",
+        "https://www.youtube.com/watch?v=fake443",
+        "https://www.youtube.com/watch?v=fake444",
+        "https://www.youtube.com/watch?v=fake445"
+    ]
+    return video_links
 # @router.get("/", response_model=List[str])
 # def get_youtube_links(topic: str, video_length: str) -> List[str]:
 #     """
