@@ -14,6 +14,27 @@ router = APIRouter()
 @router.post("/", response_model=QuestionResponse)
 async def generate_question(question: QuestionRequest):
     try:
+        """
+        Generate a question based on the provided subject and difficulty.
+    
+        This function handles the generation of a question using OpenAI based on the
+        `QuestionRequest` provided by the client. Depending on the presence of `answers_count`,
+        the function may generate a multiple-choice question or a single-answer question.
+    
+        Args:
+            question (QuestionRequest): The request body containing the question parameters,
+                                        including the subject and answers_count.
+    
+        Returns:
+            QuestionResponse: The response containing the generated question, its correct answer,
+                              and any additional details.
+    
+        Raises:
+            HTTPException: 
+                - 404: If the subject provided in the request is not found in the available topics.
+                - 500: If there is a missing key in the response data from OpenAI.
+                - 400: For any other general errors that occur during question generation.
+        """
         if question.subject in mongo_db.load_topics_from_mongo():
             with_answers = True if question.answers_count and question.answers_count > 0 else False
             if with_answers:
