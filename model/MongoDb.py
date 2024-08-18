@@ -17,6 +17,7 @@ class MongoDatabase:
         self.questions_collection = self.db["Questions"]
         self.users_answers_collection = self.db["Users"]
         self.stats_collection = self.db["stats"]
+        self.quotes_collection = self.db["quotes"]
         self.topics = self.db["allowed_topics"]
         self.init_topics()
 
@@ -91,6 +92,33 @@ class MongoDatabase:
             app_logger.error(f"Error loading topics from MongoDB: {e}")
             raise RuntimeError("Failed to load topics from MongoDB") from e
 
+    def insert_new_topic(self, topic_name):
+        """
+        Insert a new topic into the allowed_topics collection if it doesn't already exist.
+
+        Args:
+            topic_name (str): The name of the topic to insert.
+
+        Returns:
+            dict: A message indicating the result of the operation.
+
+        Raises:
+            RuntimeError: If there is an error inserting the topic.
+        """
+        try:
+            # Check if the topic already exists
+            if self.topics.find_one({"name": topic_name}):
+                app_logger.info(f"Topic '{topic_name}' already exists in the database.")
+                return {"message": f"Topic '{topic_name}' already exists."}
+
+            # Insert the new topic
+            self.topics.insert_one({"name": topic_name})
+            app_logger.info(f"Inserted new topic '{topic_name}' into the database.")
+            return {"message": f"Topic '{topic_name}' successfully inserted."}
+
+        except PyMongoError as e:
+            app_logger.error(f"Error inserting topic into MongoDB: {e}")
+            raise RuntimeError("Failed to insert topic into MongoDB") from e
 
 def check_mongo_connection():
     username = UP.quote_plus(config.MONGO_USERNAME)

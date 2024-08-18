@@ -13,7 +13,7 @@ def get_db():
     return youtube_mongo
 
 
-class YouTubeService:
+class YouTubeMongoService:
 
     def __init__(self):
         self.client = check_mongo_connection()
@@ -22,7 +22,7 @@ class YouTubeService:
         self.user_watched_links_collection = self.db["user_watched_links"]
         self.initialize_collections()
         # self.initialize_user("test_user1")
-        self.add_fake_urls_to_python()
+        # self.add_fake_urls_to_python()
 
     def initialize_collections(self):
         """
@@ -70,14 +70,34 @@ class YouTubeService:
             )
         return {"message": "Fake URLs added successfully"}
 
+    def find_youtube_links_user_by_topic_and_length(self, topic: str, length: str, user_id: str):
+        """
+        Retrieves YouTube links watched by a specific user for a given topic and length.
+        """
+        user_data = self.user_watched_links_collection.find_one({"user_id": user_id})
+
+        if user_data is None:
+            app_logger.warning(f"No user data found for user_id '{user_id}'. Returning empty list.")
+            return []
+
+        watched_links = user_data.get("watched", {}).get(topic, {}).get("length", {}).get(length, [])
+
+        app_logger.info(
+            f"Retrieved {len(watched_links)} watched URLs for user_id '{user_id}', topic '{topic}', and length '{length}'.")
+        return watched_links
     def find_youtube_links_by_topic_and_length(self, topic: str, length: str):
         """
-            Retrieves YouTube links for a specific topic and length from the database.
+        Retrieves YouTube links for a specific topic and length from the database.
+        return list if links
         """
         document = self.youtube_links_collection.find_one({'topic': topic})
-        urls = []
-        for url in document["length"][length]:
-            urls.append(url)
+
+        if document is None:
+            app_logger.warning(f"No document found for topic '{topic}'. Returning empty list.")
+            return []
+
+        urls = document["length"].get(length, [])
+
         app_logger.info(f"Retrieved {len(urls)} URLs for topic '{topic}' and length '{length}'.")
         return urls
 
@@ -102,13 +122,37 @@ class YouTubeService:
             {"$push": {f"watched.{topic}.length.{length}": video_url}}
         )
         if update_result.modified_count > 0:
-            app_logger.info(f"User stats updated for user_id '{user_id}', topic '{topic}', length '{length}', with video URL '{video_url}'.")
+            app_logger.info(
+                f"User stats updated for user_id '{user_id}', topic '{topic}', length '{length}', with video URL '{video_url}'.")
             return True
         else:
-            app_logger.error(f"Failed to update user stats for user_id '{user_id}', topic '{topic}', length '{length}', with video URL '{video_url}'.")
+            app_logger.error(
+                f"Failed to update user stats for user_id '{user_id}', topic '{topic}', length '{length}', with video URL '{video_url}'.")
+            return False
+
+    def add_youtube_link(self, topic, length, url):
+        """
+        Adds a YouTube URL to the specified topic and length in the MongoDB collection.
+
+        :param topic: The topic/category under which the URL should be stored.
+        :param length: The length category (e.g., 'short', 'medium', 'long').
+        :param url: The YouTube URL to be added.
+        """
+        update_result = self.youtube_links_collection.update_one(
+            {"topic": topic},
+            {"$addToSet": {f"length.{length}": url}},
+            upsert=True
+        )
+        if update_result.modified_count:
+            app_logger.info(f"URL added to existing document under topic '{topic}' and length '{length}'.")
+            return True
+        else:
+            app_logger.info(
+                f"URL '{url}' was already present under topic '{topic}' and length '{length}' and was not added again.")
             return False
 
 
+# Example usage
 def check_mongo_connection():
     if not config.MONGO_CONNECTION_STRING:
         raise KeyError("MongoDB connection string is not set/loaded correctly.")
@@ -121,4 +165,4 @@ def check_mongo_connection():
         return {"error": str(e)}
 
 
-youtube_mongo = YouTubeService()
+youtube_mongo = YouTubeMongoService()

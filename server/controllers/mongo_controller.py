@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Response, status,HTTPException
+from fastapi import APIRouter, Response, status, HTTPException, Body
 from model.MongoDb import MongoDatabase
 from server.utils.logger import app_logger
 from model.MongoDb import MongoDatabase 
@@ -86,5 +86,25 @@ def submit_answer(answer_data: dict, response: Response):
 
     # Update statistics by topic and difficulty
     mongo_db.update_user_stat( user_id, update_fields)
-   
 
+
+@router.post("/add-topic/")
+async def add_topic(topic_name: str = Body(..., embed=True)):
+    """
+    Add a new topic to the MongoDB allowed_topics collection.
+
+    Args:
+        topic_name (str): The name of the topic to add.
+
+    Returns:
+        dict: A message indicating the result of the operation.
+
+    Raises:
+        HTTPException: If there is an error inserting the topic.
+    """
+    try:
+        result = mongo_db.insert_new_topic(topic_name)
+        return result
+    except RuntimeError as e:
+        app_logger.error(f"Failed to add topic '{topic_name}': {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))

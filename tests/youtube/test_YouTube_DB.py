@@ -1,14 +1,14 @@
 import pytest
 from fastapi.testclient import TestClient
 from server.server import app
-from model.YouTube_DB import YouTubeService, get_db
+from model.YouTube_DB import YouTubeMongoService, get_db
 from constants import CATEGORIES
 
 client = TestClient(app)
 
 
 def get_db_override():
-    db_service = YouTubeService()
+    db_service = YouTubeMongoService()
     db_service.add_fake_urls_to_python()  # Add fake URLs from fake1 to fake20
     return db_service
 

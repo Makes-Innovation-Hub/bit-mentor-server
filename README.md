@@ -99,7 +99,7 @@ These files should be located in the root directory of your project
 - `MOTIVATION_API_DEV`: API key for motivational quotes API  
 - `YOUTUBE_API_DEV`: API ket for youtube services.  
 
-* .env_prod For 
+* .env_prod For Prod
 
 - `SERVER_URL_PROD`: Url of server.
 - `MONGO_USERNAME_PROD`: Username for MongoDB Atlas.
@@ -108,6 +108,7 @@ These files should be located in the root directory of your project
 - `OPENAI_KEY_PROD`: API key for OpenAI services.
 -  `MONGO_CONNECTION_STRING_PROD`: full URL for mongo atlas
 - `MOTIVATION_API_PROD`: API key for motivational quotes API  
+- `YOUTUBE_API_PROD`: API ket for youtube services.
 - `YOUTUBE_API_PROD`: API ket for youtube services.  
 
 ## How to Run      

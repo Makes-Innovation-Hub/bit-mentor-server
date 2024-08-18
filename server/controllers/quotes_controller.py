@@ -1,11 +1,20 @@
+import random
 from fastapi import APIRouter, HTTPException
 import requests
-
+import model.select_queries as select_queries
+import model.insert_queries as insert_queries
 from setting.config import *
+from model.MongoDb import MongoDatabase
+from server.utils.logger import app_logger
 
 router = APIRouter()
 
-@router.get("/{user_id}")
+mongo_uri = config.MONGO_CLUSTER
+database_name = config.DATABASE_NAME
+mongo_db = MongoDatabase(mongo_uri, database_name)
+quotes_collection = mongo_db.quotes_collection
+
+@router.get("/quote/{user_id}")
 def get_quote(user_id: int):
     """
     Retrieves a random quote from the API.
@@ -18,10 +27,44 @@ def get_quote(user_id: int):
     Raises:
         HTTPException: If the response status code is not 200.
     """
-    api_url = 'https://api.api-ninjas.com/v1/quotes'
-    response = requests.get(api_url, headers={'X-Api-Key': config.MOTIVATION_API})
-
-    if response.status_code == requests.codes.ok:
-        return response.json()[0]
+    quotes = select_queries.get_random_quotes(quotes_collection)
+    for quote in quotes:
+        if user_id not in quote['user_ids']:
+            insert_queries.add_user_to_quote(quotes_collection, quote['_id'], user_id)
+            return quote['quote']
+    motivational_categories = {
+    "amazing",
+    "courage",
+    "dreams",
+    "happiness",
+    "hope",
+    "inspirational",
+    "intelligence",
+    "learning",
+    "life",
+    "love",
+    "success"
+}
+    new_quote = None
+    
+    for _ in range(5):
+        random_category = random.choice(list(motivational_categories))
+        api_url = 'https://api.api-ninjas.com/v1/quotes?category=' + random_category
+        response = requests.get(api_url, headers={'X-Api-Key': config.MOTIVATION_API})
+        if response.status_code != requests.codes.ok:
+            app_logger.warning("Failed to retrieve a new quote from the API")
+            raise HTTPException(status_code=400, detail="Error")
+        quote_doc = quotes_collection.find_one({'quote': response.json()[0]})
+        if not quote_doc:
+            new_quote = response.json()[0]
+            break
+    
+    if new_quote:
+        insert_queries.insert_quote(quotes_collection, new_quote)
+        quote_doc = quotes_collection.find_one({'quote': new_quote})
+        if quote_doc:
+            insert_queries.add_user_to_quote(quotes_collection, quote_doc['_id'], user_id)
+            return new_quote
     else:
+        app_logger.warning("Failed to retrieve a new quote from the API that user has not seen before")
         raise HTTPException(status_code=400, detail="Error")
