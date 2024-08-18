@@ -1,22 +1,22 @@
-# bit-mentor-server
-
-## Table of Contents
-- [Team Members](#team-members)
-- [Overview](#overview)
-- [Technologies](#technologies)
-- [Diagram](#Diagram)
-- [Project Folder Structure](#project-folder-structure)
-
-## Team members:  
-- Muhammad Sarahni  
-- Adam Kaabiya  
-- Najeeb Ibrahim  
-- Maysa Zbidat  
-- Aseel Khamis  
-
-## Overview  
-This web server powers the Bit Mentor Telegram bot. It receives a topic from the bot and dynamically generates questions and answers related to that topic, then sends them to the bot.   
-
+# bit-mentor-server  
+  
+## Table of Contents  
+- [Team Members](#team-members)  
+- [Overview](#overview)  
+- [Technologies](#technologies)  
+- [Diagram](#Diagram)  
+- [Project Folder Structure](#project-folder-structure)  
+  
+## Team members: 
+- Muhammad Sarahni    
+- Adam Kaabiya    
+- Najeeb Ibrahim    
+- Maysa Zbidat    
+- Aseel Khamis    
+  
+## Overview 
+This web server powers the Bit Mentor Telegram bot. It receives a topic from the bot and dynamically generates questions and answers related to that topic, then sends them to the bot.     
+  
 ## Technologies:  
 
 The architecture for the Bit Mentor Telegram bot's web server consists of the following components:  
@@ -50,6 +50,7 @@ The architecture for the Bit Mentor Telegram bot's web server consists of the fo
   - Contains functions or methods for **inserting new documents** into MongoDB.
 ---
 
+  
 ### tests Folder
 The `tests` folder is dedicated to storing tests  for your application. Automated testing helps ensure that your 
 
@@ -75,8 +76,7 @@ such as :
 env includes:
 - OPENAI_KEY = open ai key
 
----
-
+---  
 ### setting Folder
 The `setting/` folder contains configuration files.
 - **`config.py`**: 
@@ -94,6 +94,11 @@ These files should be located in the root directory of your project
 - `MONGO_PASSWORD_DEV`: Password for MongoDB Atlas.
 - `MONGO_CLUSTER_DEV`: Cluster URL for MongoDB Atlas. 
 - `OPENAI_KEY_DEV`: API key for OpenAI services.
+-  `MONGO_CONNECTION_STRING_DEV`: full URL for mongo atlas
+* .env_prod For Prod
+- `MOTIVATION_API_DEV`: API key for motivational quotes API  
+- `YOUTUBE_API_DEV`: API ket for youtube services.  
+
 * .env_prod For Prod
 
 - `SERVER_URL_PROD`: Url of server.
@@ -101,6 +106,11 @@ These files should be located in the root directory of your project
 - `MONGO_PASSWORD_PROD`: Password for MongoDB Atlas.
 - `MONGO_CLUSTER_PROD`: Cluster URL for MongoDB Atlas. 
 - `OPENAI_KEY_PROD`: API key for OpenAI services.
+-  `MONGO_CONNECTION_STRING_PROD`: full URL for mongo atlas
+- `MOTIVATION_API_PROD`: API key for motivational quotes API  
+- `YOUTUBE_API_PROD`: API ket for youtube services.
+- `YOUTUBE_API_PROD`: API ket for youtube services.  
+
 ## How to Run      
  In the root directory, open terminal and run these commands:        
 1.Install the required packages:    
@@ -123,3 +133,179 @@ python -m server.server --env prod
 
 To run tests use this command      
 ``` pytest ```
+
+
+## QuestDB
+### Collections Overview:
+**1. Questions Collection**
+This collection stores individual questions with relevant details:
+
+-   **Topic**: The subject of the question (e.g., Python).
+-   **Difficulty**: The difficulty level of the question (e.g., easy).
+-   **Question**: The text of the question.
+-   **Options**: The possible answers to the question.
+-   **Correct Answer Index**: The index of the correct answer in the options array.
+-   **Explanation**: An explanation of the correct answer.
+-   **Users Answered**: A list of users who have answered the question, with an indicator of whether their answer was correct.
+```json
+[
+    {
+        "topic": "python",
+        "difficulty": "easy",
+        "question": "What does the sum function in Python do?",
+        "options": ["Adds all elements in a list", "Subtracts all elements in a list"],
+        "correct_answer_idx": 0,
+        "explanation": "The sum function adds all elements in an iterable.",
+        "users_answered": [
+            {"user_id": 123, "correct": True},
+            {"user_id": 124, "correct": False}
+        ]
+    }
+]
+
+```
+**2. Stats Collection**
+
+This collection stores data about individual users and their performance:
+
+-   **tele_id**: Unique identifier for the user.
+-   **Topics**: A nested structure containing performance metrics for different topics.
+    -   **Difficulty**: Metrics for each difficulty level.
+        -   **Questions Attempted**: Number of questions attempted.
+        -   **Questions Correct**: Number of questions answered correctly.
+```json
+[
+    {
+        "tele_id": 123,
+        "topics": {
+            "python": {
+                "difficulty": {
+                    "easy": {
+                        "questions_attempted": 10,
+                        "questions_correct": 8
+                    },
+                    "medium": {
+                        "questions_attempted": 5,
+                        "questions_correct": 3
+                    },
+                    "hard": {
+                        "questions_attempted": 2,
+                        "questions_correct": 1
+                    }
+                }
+            }
+        }
+    }
+]
+
+```
+
+**3. Allowed topics Collection**
+
+This collection contains the topics for which users can retrieve questions. 
+Each document in the collection represents a single topic, identified by a unique ID and name.
+
+Example of the collection structure:
+```json
+[
+  {
+    "_id": 123,
+    "name": "python"
+  },
+  {
+    "_id": 456,
+    "name": "algorithms"
+  }
+]
+
+```
+
+---
+
+
+## YouTube Links Structure
+
+The following JSON structure outlines the YouTube links categorized by topics and video lengths:
+
+```json
+[
+    {
+        "topic": "Python",
+        "length": {
+            "short": [
+                {"url": "https://www.youtube.com/watch?v=fake1"},
+                {"url": "https://www.youtube.com/watch?v=fake2"}
+            ],
+            "medium": [
+                {"url": "https://www.youtube.com/watch?v=fake3"},
+                {"url": "https://www.youtube.com/watch?v=fake4"}
+            ],
+            "long": [
+                {"url": "https://www.youtube.com/watch?v=fake5"},
+                {"url": "https://www.youtube.com/watch?v=fake6"}
+            ]
+        }
+    },
+    {
+        "topic": "SQL",
+        "length": {
+            "short": [
+                {"url": "https://www.youtube.com/watch?v=fake7"},
+                {"url": "https://www.youtube.com/watch?v=fake8"}
+            ],
+            "medium": [
+                {"url": "https://www.youtube.com/watch?v=fake9"},
+                {"url": "https://www.youtube.com/watch?v=fake10"}
+            ],
+            "long": [
+                {"url": "https://www.youtube.com/watch?v=fake11"},
+                {"url": "https://www.youtube.com/watch?v=fake12"}
+            ]
+        }
+    }
+]
+
+## User Watched Links Structure
+The following JSON structure keeps track of which links each user has watched, categorized by topics and lengths:
+{
+    "user_id": "user1": { 
+        "watched": {
+            "Python": {
+                "length": {
+                    "short": [
+                        {"url": "https://www.youtube.com/watch?v=fake1"}
+                    ],
+                    "medium": [],
+                    "long": []
+                }
+            },
+            "SQL": {
+                "length": {
+                    "short": [],
+                    "medium": [],
+                    "long": []
+                }
+            }
+        }
+    },
+    "user_id":user2": {  
+        "watched": {
+            "Python": {
+                "length": {
+                    "short": [],
+                    "medium": [],
+                    "long": []
+                }
+            },
+            "SQL": {
+                "length": {
+                    "short": [],
+                    "medium": [],
+                    "long": []
+                }
+            }
+        }
+    }
+}
+BASIC TOPICS
+CATEGORIES = ["MongoDB", "SQL", "Databases", "System Design", "Data Structures", "Algorithms", "Python"]
