@@ -5,6 +5,7 @@ from model.MongoDb import MongoDatabase
 from setting.config import *
 from pymongo.errors import ConnectionFailure, PyMongoError
 from model.MongoDb import check_mongo_connection
+from data_types.question_models import *
 
 
 
@@ -68,11 +69,11 @@ def insert_question(question_data: dict, response: Response):
         return {"error": str(e)}
 
 @router.post("/update-user-stat")
-def submit_answer(answer_data: dict, response: Response):
-    user_id = answer_data['user_id']
-    topic = answer_data['topic']
-    difficulty = answer_data['difficulty']
-    score = answer_data['score']
+def submit_answer(answer_data: AnswerDataModel, response: Response):
+    user_id = answer_data.user_id
+    topic = answer_data.subject
+    difficulty = answer_data.difficulty
+    score = answer_data.score
     is_correct = False
     if score > 0:
         is_correct = True
