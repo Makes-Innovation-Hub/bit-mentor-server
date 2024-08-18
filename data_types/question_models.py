@@ -30,3 +30,9 @@ class OpenQuestionResponse(BaseModel):
     question: str
     answer: str
     explanation: str
+
+class AnswerDataModel(BaseModel):
+    user_id: int
+    subject: str
+    difficulty: str
+    score: int
