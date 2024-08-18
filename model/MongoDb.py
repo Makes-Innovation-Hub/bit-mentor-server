@@ -17,6 +17,7 @@ class MongoDatabase:
         self.questions_collection = self.db["Questions"]
         self.users_answers_collection = self.db["Users"]
         self.stats_collection = self.db["stats"]
+        self.quotes_collection = self.db["quotes"]
         self.topics = self.db["allowed_topics"]
         self.init_topics()
 
