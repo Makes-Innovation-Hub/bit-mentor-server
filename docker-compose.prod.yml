@@ -1,19 +1,22 @@
 version: '3.8'
-
 services:
-  app:
-    environment:
-      - ENV=prod
-      - MONGO_USERNAME_PROD=${MONGO_USERNAME_PROD}
-      - MONGO_PASSWORD_PROD=${MONGO_PASSWORD_PROD}
-      - MONGO_CLUSTER_PROD=${MONGO_CLUSTER_PROD}
-      - OPENAI_KEY_PROD=${OPENAI_KEY_PROD}
+  bit-mentor-server:
+    image: bit-mentor-server:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: bit-mentor-server-container
     env_file:
       - .env_prod
+    volumes:
+      - ./.env_dev:/app/.env_prod
+    ports:
+      - "8000:8000"
+    command: python -m server.server --env prod
+    networks:
+      - bit-mentor
 
-  mongo:
-    environment:
-      - MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME}
-      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}
-    env_file:
-      - .env_prod
+networks:
+  bit-mentor:
+    external: true
+

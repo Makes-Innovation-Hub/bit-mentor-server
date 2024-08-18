@@ -1,25 +1,21 @@
+version: '3.8'
 services:
-  app:
-    environment:
-      - ENV=dev
-      - SERVER_URL_DEV=${SERVER_URL_DEV}
-      - OPENAI_KEY_DEV=${OPENAI_KEY_DEV}
-      - DATABASE_NAME_DEV=${DATABASE_NAME_DEV}
-      - COLLECTION_NAME_DEV=${COLLECTION_NAME_DEV}
-      - MONGO_USERNAME_DEV=${MONGO_USERNAME_DEV}
-      - MONGO_PASSWORD_DEV=${MONGO_PASSWORD_DEV}
-      - MONGO_CLUSTER_DEV=${MONGO_CLUSTER_DEV}
-      - MONGO_URI_DEV=${MONGO_URI_DEV}
+  bit-mentor-server:
+    image: bit-mentor-server:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: bit-mentor-server-container
     env_file:
       - .env_dev
-
-  mongo:
-    image: mongo:latest
-    environment:
-      - MONGO_INITDB_ROOT_USERNAME=${MONGO_USERNAME_DEV}
-      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_PASSWORD_DEV}
     volumes:
-      - mongo-data:/data/db
+      - ./.env_dev:/app/.env_dev
+    ports:
+      - "8000:8000"
+    command: python -m server.server --env dev
+    networks:
+      - bit-mentor
 
-volumes:
-  mongo-data:
+networks:
+  bit-mentor:
+    external: true
