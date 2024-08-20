@@ -20,7 +20,7 @@ class YouTubeService:
         except Exception as e:
             return None
 
-    def fetch_youtube_links(self, youtube: Resource, topic: str, video_length: str) -> List[str]:
+    def fetch_youtube_links(self, youtube: Resource, topic: str, video_length: str):
         if not topic:
             raise HTTPException(status_code=400, detail="Topic cannot be an empty string")
 
@@ -36,11 +36,17 @@ class YouTubeService:
                 maxResults=5
             )
             response = request.execute()
+            # Extract video links and titles
             video_links = [
                 f"https://www.youtube.com/watch?v={item['id']['videoId']}"
                 for item in response['items']
             ]
-            return video_links
+            video_titles = [
+                item['snippet']['title']
+                for item in response['items']
+            ]
+            return video_links, video_titles
+
         except HttpError as e:
             raise HTTPException(status_code=400, detail=f"An HTTP error occurred while fetching YouTube links: {e}")
         except Exception as e:
