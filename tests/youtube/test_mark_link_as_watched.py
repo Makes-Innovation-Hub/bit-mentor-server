@@ -1,4 +1,3 @@
-import pytest
 from fastapi.testclient import TestClient
 from server.server import app
 from model.YouTube_DB import YouTubeMongoService, get_db
@@ -41,7 +40,7 @@ def test_mark_link_as_watched_success():
     assert "https://www.youtube.com/watch?v=fake8" not in user_data["watched"]["Python"]["length"]["short"]
 
 
-########################################################################################################################
+#######################################################################################################################
 # MISSING INPUTS
 def test_mark_link_as_watched_missing_user_id():
     request_data = {
@@ -91,7 +90,7 @@ def test_mark_link_as_watched_missing_video_url():
     assert response.status_code == 422
 
 
-########################################################################################################################
+# ########################################################################################################################
 # INVALID INPUTS
 def test_mark_link_as_watched_invalid_length():
     request_data = {

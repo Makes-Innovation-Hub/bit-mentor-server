@@ -29,6 +29,7 @@ def get_youtube_links(request: YouTubeLinkRequest, db: YouTubeMongoService = Dep
     # Retrieve existing links and user-specific links
     youtube_links, youtube_titles = db.find_youtube_links_by_topic_and_length(request.topic, request.length)
     user_links = db.find_youtube_links_user_by_topic_and_length(request.topic, request.length, request.user_id)
+
     app_logger.info(f"Found {len(youtube_links)} YouTube links and {len(user_links)} user-specific links.")
 
     if youtube_links:
@@ -36,8 +37,8 @@ def get_youtube_links(request: YouTubeLinkRequest, db: YouTubeMongoService = Dep
         available_links = find_available_links(youtube_links, user_links)
 
         # Reorder the titles to match the available links
-        available_titles = [youtube_titles[youtube_links.index(link)] for link in available_links if link in youtube_links]
-
+        available_titles = [youtube_titles[youtube_links.index(link)] for link in available_links if
+                            link in youtube_links]
         if len(available_links) >= 5:
             available_links = available_links[:5]
             available_titles = available_titles[:5]
@@ -52,8 +53,15 @@ def get_youtube_links(request: YouTubeLinkRequest, db: YouTubeMongoService = Dep
 
     try:
         video_links, video_titles = youtube_service.fetch_youtube_links(youtube, request.topic, request.length)
+        print(type(video_links), type(video_titles))
+        print(len(video_links),len(video_titles))
+        # app_logger.info(f"len of links: {len(video_links)} len of titles: {video_titles} ")
+
         for link, title in zip(video_links, video_titles):
             db.add_youtube_link(request.topic, request.length, link, title)
+
+        # Log the new links and titles fetched from YouTube
+        app_logger.info(f"Fetched {len(video_links)} YouTube links from the API:")
 
         # Update youtube_links with newly fetched links
         youtube_links.extend(video_links)
@@ -68,8 +76,10 @@ def get_youtube_links(request: YouTubeLinkRequest, db: YouTubeMongoService = Dep
             return available_links, available_titles
         else:
             app_logger.warning("Not enough videos found after fetching new links.")
-            return [], []
+            raise HTTPException(status_code=404, detail="No videos found for the given topic and length")
 
+    except HTTPException as e:
+        raise e
     except Exception as e:
         app_logger.error(f"Error occurred while fetching video links: {str(e)}")
         raise HTTPException(status_code=500, detail="Error occurred while fetching video links")
@@ -99,8 +109,7 @@ def mark_link_as_watched(request: MarkLinkAsWatchedRequest, db: YouTubeMongoServ
     app_logger.info(f"Initialized user: {request.user_id}")
 
     # check if url exist in youtube_links_collection
-    youtube_links,_ = db.find_youtube_links_by_topic_and_length(request.topic, request.length)
-    print("links", youtube_links)
+    youtube_links, _ = db.find_youtube_links_by_topic_and_length(request.topic, request.length)
     # Validate video url
     if request.video_url not in youtube_links:
         app_logger.error(f"Invalid video URL: {request.video_url} URL does not exist in YouTube links")

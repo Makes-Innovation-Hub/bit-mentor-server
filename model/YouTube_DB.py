@@ -78,13 +78,9 @@ class YouTubeMongoService:
         user_data = self.user_watched_links_collection.find_one({"user_id": user_id})
 
         if user_data is None:
-            app_logger.warning(f"No user data found for user_id '{user_id}'. Returning empty list.")
             return []
 
         watched_links = user_data.get("watched", {}).get(topic, {}).get("length", {}).get(length, [])
-
-        app_logger.info(
-            f"Retrieved {len(watched_links)} watched URLs for user_id '{user_id}', topic '{topic}', and length '{length}'.")
         return watched_links
 
     def find_youtube_links_by_topic_and_length(self, topic: str, length: str):
@@ -95,12 +91,10 @@ class YouTubeMongoService:
         document = self.youtube_links_collection.find_one({'topic': topic})
 
         if document is None:
-            app_logger.warning(f"No document found for topic '{topic}'. Returning empty list.")
             return [], []
 
         videos = document.get("length", {}).get(length, [])
 
-        app_logger.info(f"Retrieved {len(videos)} URLs for topic '{topic}' and length '{length}'.")
         urls = [video['url'] for video in videos]
         titles = [video['title'] for video in videos]
         return urls, titles
@@ -112,9 +106,7 @@ class YouTubeMongoService:
             """
         user_data = self.user_watched_links_collection.find_one({"user_id": user_id})
         if user_data and video_url in user_data["watched"][topic]["length"][length]:
-            app_logger.info(f"Video URL '{video_url}' has already been watched by user_id '{user_id}'.")
             return True
-        app_logger.info(f"Video URL '{video_url}' has not been watched by user_id '{user_id}'.")
         return False
 
     def update_user_stats(self, user_id: str, topic: str, length: str, video_url: str) -> bool:
@@ -140,19 +132,28 @@ class YouTubeMongoService:
         Adds a YouTube URL and its title to the specified topic and length in the MongoDB collection.
         """
         link_entry = {"url": url, "title": title}
-        # Update the document in the MongoDB collection
+
+        # First, check if the URL is already present
+        existing_link = self.youtube_links_collection.find_one(
+            {"topic": topic, f"length.{length}.url": url}
+        )
+
+        if existing_link:
+            return False
+
+        # If the URL is not present, add it
         update_result = self.youtube_links_collection.update_one(
             {"topic": topic},
             {"$addToSet": {f"length.{length}": link_entry}},
             upsert=True
         )
 
-        if update_result.modified_count:
-            app_logger.info(f"URL and title added to existing document under topic '{topic}' and length '{length}'.")
+        if update_result.modified_count or update_result.upserted_id:
+            app_logger.info(f"Added new URL '{url}' with title '{title}' under topic '{topic}' and length '{length}'.")
             return True
         else:
-            app_logger.info(
-                f"URL '{url}' with title '{title}' was already present under topic '{topic}' and length '{length}' and was not added again.")
+            app_logger.error(
+                f"Failed to add URL '{url}' with title '{title}' under topic '{topic}' and length '{length}'.")
             return False
 
 

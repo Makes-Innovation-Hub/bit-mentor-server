@@ -60,10 +60,12 @@ def test_initialize_user():
 
 def test_find_youtube_links_by_topic_and_length():
     db_service = get_db_override()
-    links = db_service.find_youtube_links_by_topic_and_length("Python", "short")
-    assert len(links) == 20
-    links = db_service.find_youtube_links_by_topic_and_length("Python", "long")
-    assert len(links) == 0
+    urls, titles = db_service.find_youtube_links_by_topic_and_length("Python", "short")
+    assert len(urls) == 20
+    assert len(titles) == 20
+    urls, titles = db_service.find_youtube_links_by_topic_and_length("Python", "long")
+    assert len(urls) == 0
+    assert len(titles) == 0
 
 
 def test_link_exists_in_user_watched():
@@ -71,7 +73,7 @@ def test_link_exists_in_user_watched():
     initialized_data = db.initialize_user("test_user1")
 
     db.user_watched_links_collection.update_one(
-        {"user_id": ""},
+        {"user_id": "test_user1"},
         {"$pull": {"watched.Python.length.short": "https://www.youtube.com/watch?v=fake1"}}
     )
     # check if video URL has been removed
@@ -109,5 +111,5 @@ def test_clear_youtube_links_collection():
     fake_urls = [f"https://www.youtube.com/watch?v=fake{i}" for i in range(1, 21)]
     db_service.youtube_links_collection.update_one(
         {"topic": "Python"},
-        {"$pull": {"length.short": {"$in": fake_urls}}}
+        {"$pull": {"length.short": {"url": {"$in": fake_urls}}}}
     )
