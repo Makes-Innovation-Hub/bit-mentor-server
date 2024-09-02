@@ -1,3 +1,4 @@
+import random
 from typing import List
 
 from fastapi import HTTPException
@@ -20,27 +21,42 @@ class YouTubeService:
         except Exception as e:
             return None
 
-    def fetch_youtube_links(self, youtube: Resource, topic: str, video_length: str) -> List[str]:
+    def fetch_youtube_links(self, youtube: Resource, topic: str, video_length: str):
         if not topic:
             raise HTTPException(status_code=400, detail="Topic cannot be an empty string")
 
-            # Validate video_length
         if video_length not in ["short", "medium", "long"]:
             raise HTTPException(status_code=400, detail="Video length must be one of 'short', 'medium', or 'long'")
+
         try:
+            # Randomly select a variation to modify the topic,order_options
+            variations = [' ', 'tutorial', 'guide', 'tips']
+            topic_variation = topic + random.choice(variations)
+            order_options = ['relevance', 'date', 'viewCount', 'rating']
+            order_choice = random.choice(order_options)
+
+            # Create and execute the request
             request = youtube.search().list(
                 part='snippet',
-                q=topic,
+                q=topic_variation,
                 type='video',
                 videoDuration=video_length,
-                maxResults=5
+                maxResults=5,
+                order=order_choice
             )
             response = request.execute()
+
+            # Extract video links and titles
             video_links = [
                 f"https://www.youtube.com/watch?v={item['id']['videoId']}"
                 for item in response['items']
             ]
-            return video_links
+            video_titles = [
+                item['snippet']['title']
+                for item in response['items']
+            ]
+            return video_links, video_titles
+
         except HttpError as e:
             raise HTTPException(status_code=400, detail=f"An HTTP error occurred while fetching YouTube links: {e}")
         except Exception as e:
