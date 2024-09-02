@@ -1,0 +1,22 @@
+version: '3.8'
+services:
+  bit-mentor-server:
+    image: bit-mentor-server:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: bit-mentor-server-container
+    env_file:
+      - .env_prod
+    volumes:
+      - ./.env_dev:/app/.env_prod
+    ports:
+      - "8000:8000"
+    command: python -m server.server --env prod
+    networks:
+      - bit-mentor
+
+networks:
+  bit-mentor:
+    external: true
+

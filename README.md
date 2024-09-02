@@ -111,6 +111,14 @@ These files should be located in the root directory of your project
 - `YOUTUBE_API_PROD`: API ket for youtube services.
 - `YOUTUBE_API_PROD`: API ket for youtube services.  
 
+## Docker  
+There is a shell script in the root directory that will push the bot to Docker hub   
+In order for it to work you need an .env_dev, dockerfile, .dockerignore and the script file in the root directory  
+Then run the script with this command
+```
+./docker username enviroment
+```
+
 ## How to Run      
  In the root directory, open terminal and run these commands:        
 1.Install the required packages:    
