@@ -1,12 +1,12 @@
 import random
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, status, Depends
 import requests
 import model.select_queries as select_queries
 import model.insert_queries as insert_queries
 from setting.config import *
 from model.MongoDb import MongoDatabase
 from server.utils.logger import app_logger
-
+from server.middlewares.auth_middlewares import check_token
 router = APIRouter()
 
 mongo_uri = config.MONGO_CLUSTER
@@ -14,8 +14,8 @@ database_name = config.DATABASE_NAME
 mongo_db = MongoDatabase(mongo_uri, database_name)
 quotes_collection = mongo_db.quotes_collection
 
-@router.get("/quote/{user_id}")
-def get_quote(user_id: int):
+@router.get("/{user_id}")
+def get_quote(user_id: int, is_telegram_user = Depends(check_token)):
     """
     Retrieves a random quote from the API.
     This function sends a GET request to the API endpoint 'https://api.api-ninjas.com/v1/quotes'
@@ -27,6 +27,8 @@ def get_quote(user_id: int):
     Raises:
         HTTPException: If the response status code is not 200.
     """
+    if not is_telegram_user:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Not authenticated")
     quotes = select_queries.get_random_quotes(quotes_collection)
     for quote in quotes:
         if user_id not in quote['user_ids']:

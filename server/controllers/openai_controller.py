@@ -1,19 +1,22 @@
 from server.utils.logger import RequestIdFilter
 from data_types.question_models import GenQuestionBody
 from server.utils.logger import app_logger, generate_request_id
-from fastapi import APIRouter, Response,status,HTTPException
+from fastapi import APIRouter, Response,status,HTTPException, Depends
 from server.utils.open_ai import get_openai_response
 from server.utils.ai_prompt import generate_question_prompt
 from data_types.question_models import *
 import requests
 from setting.config import *
 import re
+from server.middlewares.auth_middlewares import check_token
 router = APIRouter()
 
 
 
 @router.post("/check_answer")
-def check_user_answer(request: AnswerCheckRequest):
+def check_user_answer(request: AnswerCheckRequest, is_telegram_user = Depends(check_token)):
+    if not is_telegram_user:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Not authenticated")
     openai_key = config.OPENAI_KEY
     if not openai_key:
         raise HTTPException(status_code=500, detail="OpenAI API key is not loaded")

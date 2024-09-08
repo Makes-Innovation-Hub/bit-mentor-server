@@ -1,4 +1,4 @@
-from fastapi import HTTPException, APIRouter
+from fastapi import HTTPException, APIRouter, Depends, status
 
 from server.controllers.mongo_controller import mongo_db
 from server.utils.ai_prompt import generate_question_with_multiple_options
@@ -7,12 +7,12 @@ from server.utils.open_ai import get_openai_response
 from server.utils.ai_prompt import generate_question_prompt
 from data_types.question_models import QuestionRequest, QuestionResponse
 from server.utils.question_processing import process_question_request
-
+from server.middlewares.auth_middlewares import check_token
 router = APIRouter()
 
 
 @router.post("/", response_model=QuestionResponse)
-async def generate_question(question: QuestionRequest):
+async def generate_question(question: QuestionRequest, is_telegram_user = Depends(check_token)):
     """
     Generate a question based on the provided subject and difficulty.
 
@@ -34,6 +34,8 @@ async def generate_question(question: QuestionRequest):
             - 500: If there is a missing key in the response data from OpenAI.
             - 400: For any other general errors that occur during question generation.
     """
+    if not is_telegram_user:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Not authenticated")
     if question.difficulty not in ["easy", "medium", "hard", "none"]:
         app_logger.error(f"Invalid difficulty: {question.difficulty}")
         raise HTTPException(status_code=404, detail="question difficulty must be one of 'easy', 'medium', "

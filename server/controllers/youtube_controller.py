@@ -1,18 +1,20 @@
 from typing import List
 
-from fastapi import HTTPException, APIRouter, Depends
+from fastapi import HTTPException, APIRouter, Depends, status
 
 from constants import CATEGORIES
 from data_types.youtube_models import YouTubeLinkRequest, MarkLinkAsWatchedRequest
 from model.YouTube_DB import YouTubeMongoService, get_db
 from server.utils.logger import app_logger
 from server.utils.youtube import find_available_links, YouTubeService
-
+from server.middlewares.auth_middlewares import check_token
 router = APIRouter()
 
 
 @router.post("/")
-def get_youtube_links(request: YouTubeLinkRequest, db: YouTubeMongoService = Depends(get_db)):
+def get_youtube_links(request: YouTubeLinkRequest, db: YouTubeMongoService = Depends(get_db), is_telegram_user = Depends(check_token)):
+    if not is_telegram_user:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Not authenticated")
     app_logger.info(
         f"Received request to retrieve YouTube links: topic='{request.topic}', length='{request.length}', user_id='{request.user_id}'")
 
@@ -86,7 +88,7 @@ def get_youtube_links(request: YouTubeLinkRequest, db: YouTubeMongoService = Dep
 
 
 @router.post("/mark_link_watched")
-def mark_link_as_watched(request: MarkLinkAsWatchedRequest, db: YouTubeMongoService = Depends(get_db)):
+def mark_link_as_watched(request: MarkLinkAsWatchedRequest, db: YouTubeMongoService = Depends(get_db), is_telegram_user: bool = Depends(check_token)):
     """
     Mark a YouTube link as watched for a specific user.
 
@@ -94,6 +96,8 @@ def mark_link_as_watched(request: MarkLinkAsWatchedRequest, db: YouTubeMongoServ
     :param db: The YouTubeService instance used to interact with MongoDB
     :return: dict: A success message indicating that the user's stats were updated successfully.
     """
+    if not is_telegram_user:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Not authenticated")
     app_logger.info(f"Received request to mark link as watched: {request.dict()}")
 
     # Validate inputs

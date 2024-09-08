@@ -16,6 +16,7 @@ class Config:
         self.DATABASE_NAME = ""
         self.MONGO_CONNECTION_STRING = ""
         self.MOTIVATION_API = ""
+        self.JWT_KEY = ""
         self.set_parameters()
 
     def load_environment(self):
@@ -41,6 +42,7 @@ class Config:
             self.DATABASE_NAME = os.getenv("DATABASE_NAME_PROD")
             self.MONGO_CONNECTION_STRING = os.getenv("MONGO_CONNECTION_STRING_PROD")
             self.MOTIVATION_API = os.getenv("MOTIVATION_API_PROD")
+            self.JWT_KEY = os.getenv("JWT_KEY_PROD")
         else:
             self.MONGO_USERNAME = os.getenv("MONGO_USERNAME_DEV")
             self.MONGO_PASSWORD = os.getenv("MONGO_PASSWORD_DEV")
@@ -50,6 +52,7 @@ class Config:
             self.DATABASE_NAME = os.getenv("DATABASE_NAME_DEV")
             self.MONGO_CONNECTION_STRING = os.getenv("MONGO_CONNECTION_STRING_DEV")
             self.MOTIVATION_API = os.getenv("MOTIVATION_API_DEV")
+            self.JWT_KEY = os.getenv("JWT_KEY_DEV")
 
         if self.MONGO_USERNAME is None or self.MONGO_PASSWORD is None or self.MONGO_CLUSTER is None \
                 or self.OPENAI_KEY is None or self.YOUTUBE_API is None:

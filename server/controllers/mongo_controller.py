@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Response, status, HTTPException, Body
+from fastapi import APIRouter, Response, status, HTTPException, Body, Depends
 from model.MongoDb import MongoDatabase
 from server.utils.logger import app_logger
 from model.MongoDb import MongoDatabase 
@@ -6,7 +6,7 @@ from setting.config import *
 from pymongo.errors import ConnectionFailure, PyMongoError
 from model.MongoDb import check_mongo_connection
 from data_types.question_models import *
-
+from server.middlewares.auth_middlewares import check_token
 
 
 router = APIRouter()
@@ -17,7 +17,7 @@ mongo_db = MongoDatabase(mongo_uri, database_name)
 
 
 @router.get("/topics", response_model=list[str], tags=["topics"])
-async def get_topics():
+async def get_topics(is_telegram_user = Depends(check_token)):
     """
     Retrieve the list of available topics for questions.
     
@@ -27,6 +27,8 @@ async def get_topics():
     Raises:
         HTTPException: If there is an error retrieving the topics.
     """
+    if not is_telegram_user:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Not authenticated")
     try:
         topics = mongo_db.load_topics_from_mongo()
         return topics
@@ -59,7 +61,9 @@ def check_mongo(response: Response):
         return {"error": str(e)}
 
 @router.post("/insert-question")
-def insert_question(question_data: dict, response: Response):
+def insert_question(question_data: dict, response: Response, is_telegram_user = Depends(check_token)):
+    if not is_telegram_user:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Not authenticated")
     try:
         result = mongo_db.insert_question("questions", question_data)
         response.status_code = status.HTTP_201_CREATED
@@ -69,7 +73,9 @@ def insert_question(question_data: dict, response: Response):
         return {"error": str(e)}
 
 @router.post("/update-user-stat")
-def submit_answer(answer_data: AnswerDataModel, response: Response):
+def submit_answer(answer_data: AnswerDataModel, response: Response, is_telegram_user = Depends(check_token)):
+    if not is_telegram_user:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Not authenticated")
     user_id = answer_data.user_id
     topic = answer_data.subject
     difficulty = answer_data.difficulty
