@@ -23,6 +23,8 @@ services:
     environment:
       - discovery.type=single-node
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - xpack.security.enabled=false  # Disable security and HTTPS
+
     ulimits:
       memlock:
         soft: -1
@@ -50,6 +52,7 @@ services:
     container_name: kibana
     environment:
       ELASTICSEARCH_URL: http://elasticsearch:9200
+      #- ELASTICSEARCH_HOSTS=http://elasticsearch:9200
     ports:
       - "5601:5601"
     depends_on:
